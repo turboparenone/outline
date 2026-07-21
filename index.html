@@ -1,0 +1,1248 @@
+<!doctype html>
+<html lang="ru" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#ffffff" id="themeColor">
+<title>Festival Lineup Guide</title>
+<style>
+:root{
+  color-scheme:light;
+  --bg:#ffffff;
+  --surface:#ffffff;
+  --surface-2:#f5f5f3;
+  --surface-3:#ececea;
+  --text:#0b0b0b;
+  --muted:#6d6d69;
+  --line:#deded9;
+  --strong:#0b0b0b;
+  --strong-text:#ffffff;
+  --shadow:0 8px 30px rgba(0,0,0,.07);
+  --radius:22px;
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#111111;
+  --surface:#171717;
+  --surface-2:#222222;
+  --surface-3:#2b2b2b;
+  --text:#f4f4f2;
+  --muted:#adada8;
+  --line:#3b3b38;
+  --strong:#f4f4f2;
+  --strong-text:#111111;
+  --shadow:0 8px 30px rgba(0,0,0,.28);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font:15px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  transition:background .18s ease,color .18s ease;
+}
+button,textarea{font:inherit}
+button{color:inherit}
+a{color:inherit}
+.shell{max-width:840px;margin:0 auto;padding:0 20px 110px}
+.app-head{
+  padding:28px 0 18px;
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:18px;
+}
+.app-title{margin:0;font-size:clamp(31px,7vw,58px);line-height:.9;letter-spacing:-.06em}
+.app-subtitle{margin:10px 0 0;color:var(--muted);max-width:560px}
+.view-tabs{
+  position:sticky;
+  top:0;
+  z-index:20;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:5px;
+  padding:6px;
+  margin-bottom:15px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  background:color-mix(in srgb,var(--bg) 92%,transparent);
+  backdrop-filter:blur(16px);
+}
+.view-tab{
+  border:0;
+  border-radius:999px;
+  padding:11px 12px;
+  background:transparent;
+  cursor:pointer;
+  font-weight:700;
+}
+.view-tab.active{background:var(--strong);color:var(--strong-text)}
+.tab-count{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:22px;
+  height:22px;
+  padding:0 6px;
+  margin-left:5px;
+  border:1px solid currentColor;
+  border-radius:999px;
+  font-size:11px;
+}
+.filters{display:grid;gap:10px;margin-bottom:22px}
+.filter-label{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  color:var(--muted);
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+.chip-row{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding:1px 0 4px;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+}
+.chip-row::-webkit-scrollbar{display:none}
+.chip{
+  flex:0 0 auto;
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:9px 13px;
+  background:var(--surface);
+  cursor:pointer;
+  white-space:nowrap;
+}
+.chip.active{background:var(--strong);border-color:var(--strong);color:var(--strong-text)}
+.summary-strip{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin:6px 0 18px;
+  color:var(--muted);
+  font-size:13px;
+}
+.conflict-pill{
+  padding:7px 10px;
+  border-radius:999px;
+  background:var(--surface-2);
+}
+.conflict-pill.has{background:var(--strong);color:var(--strong-text)}
+.date-section{margin:0 0 32px;scroll-margin-top:82px}
+.date-heading{
+  position:sticky;
+  top:66px;
+  z-index:12;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px 0 9px;
+  margin:0 0 10px;
+  background:linear-gradient(var(--bg) 75%,transparent);
+}
+.date-heading h2{margin:0;font-size:19px;letter-spacing:-.025em}
+.date-heading span{color:var(--muted);font-size:12px}
+.card-list{display:grid;gap:10px}
+.show-card{
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  background:var(--surface);
+  overflow:hidden;
+  transition:border-color .15s ease,transform .15s ease,background .15s ease;
+}
+.show-card:hover{border-color:var(--muted)}
+.show-card.conflict{box-shadow:inset 4px 0 0 var(--strong)}
+.card-main{
+  display:grid;
+  grid-template-columns:46px minmax(0,1fr);
+  gap:12px;
+  padding:17px 16px 15px;
+}
+.heart{
+  width:42px;
+  height:42px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  background:transparent;
+  cursor:pointer;
+  font-size:23px;
+  line-height:1;
+}
+.heart.on{background:var(--strong);border-color:var(--strong);color:var(--strong-text)}
+.card-copy{min-width:0}
+.card-topline{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+}
+.artist-name{
+  margin:0;
+  font-size:20px;
+  line-height:1.14;
+  letter-spacing:-.025em;
+  overflow-wrap:anywhere;
+}
+.card-time{margin-top:5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.card-hook{margin:11px 0 0;color:var(--text)}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:11px}
+.tag{
+  padding:5px 8px;
+  border-radius:999px;
+  background:var(--surface-2);
+  color:var(--muted);
+  font-size:11px;
+}
+.more-button{
+  margin-top:13px;
+  padding:0;
+  border:0;
+  background:transparent;
+  font-weight:700;
+  cursor:pointer;
+  text-decoration:underline;
+  text-underline-offset:4px;
+}
+.card-extra{
+  display:none;
+  padding:0 16px 17px 74px;
+  border-top:1px solid transparent;
+}
+.show-card.open .card-extra{
+  display:block;
+  border-top-color:var(--line);
+  padding-top:16px;
+}
+.card-extra p{margin:0 0 11px}
+.why{padding:12px 14px;border-radius:14px;background:var(--surface-2)}
+.card-actions{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.action{
+  display:inline-flex;
+  align-items:center;
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:9px 12px;
+  background:transparent;
+  text-decoration:none;
+  cursor:pointer;
+}
+.action.primary{background:var(--strong);border-color:var(--strong);color:var(--strong-text)}
+.note-label{display:block;margin:17px 0 7px;font-weight:700}
+.note{
+  width:100%;
+  min-height:86px;
+  resize:vertical;
+  border:1px solid var(--line);
+  border-radius:15px;
+  padding:12px;
+  background:var(--surface-2);
+  color:var(--text);
+  outline:none;
+}
+.note:focus{border-color:var(--text)}
+.note-status{margin-top:5px;color:var(--muted);font-size:11px;min-height:16px}
+.sources{display:flex;align-items:center;gap:7px;margin-top:14px;color:var(--muted);font-size:11px}
+.sources a{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:25px;
+  height:25px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  text-decoration:none;
+}
+.conflict-box{
+  margin:0 0 15px;
+  padding:14px;
+  border-radius:17px;
+  background:var(--strong);
+  color:var(--strong-text);
+}
+.conflict-box strong{display:block;margin-bottom:4px}
+.gap{
+  border:1px dashed var(--line);
+  border-radius:18px;
+  padding:13px 15px;
+  background:var(--surface-2);
+  color:var(--muted);
+}
+.gap strong{color:var(--text)}
+.gap details{margin-top:8px}
+.gap summary{cursor:pointer;font-weight:700;color:var(--text)}
+.gap-option{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:8px;
+  align-items:center;
+  padding:9px 0;
+  border-top:1px solid var(--line);
+}
+.empty{
+  padding:65px 20px;
+  text-align:center;
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  background:var(--surface);
+}
+.empty h2{margin:0 0 9px;font-size:26px;letter-spacing:-.035em}
+.empty p{margin:0 auto 18px;max-width:470px;color:var(--muted)}
+.menu-button{
+  position:fixed;
+  z-index:60;
+  left:16px;
+  bottom:calc(16px + env(safe-area-inset-bottom,0px));
+  display:flex;
+  align-items:center;
+  gap:10px;
+  height:49px;
+  padding:0 17px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  background:var(--surface);
+  box-shadow:var(--shadow);
+  cursor:pointer;
+}
+.menu-icon{width:18px;display:grid;gap:4px}
+.menu-icon i{height:1.5px;background:currentColor;display:block}
+.backdrop{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:49;
+  background:rgba(0,0,0,.36);
+  backdrop-filter:blur(4px);
+}
+.drawer{
+  position:fixed;
+  z-index:50;
+  left:0;
+  top:0;
+  bottom:0;
+  width:min(88vw,370px);
+  padding:30px 20px calc(90px + env(safe-area-inset-bottom,0px));
+  background:var(--surface);
+  border-right:1px solid var(--line);
+  transform:translateX(-105%);
+  transition:transform .2s ease;
+  overflow-y:auto;
+}
+body.menu-open{overflow:hidden}
+body.menu-open .backdrop{display:block}
+body.menu-open .drawer{transform:translateX(0)}
+.drawer h2{margin:0 0 22px;font-size:29px;letter-spacing:-.04em}
+.drawer-nav{border-top:1px solid var(--line)}
+.drawer-nav button{
+  width:100%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border:0;
+  border-bottom:1px solid var(--line);
+  background:transparent;
+  padding:16px 0;
+  text-align:left;
+  cursor:pointer;
+  font-size:18px;
+}
+.drawer-section{padding:23px 0;border-bottom:1px solid var(--line)}
+.drawer-label{display:block;margin-bottom:11px;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+.theme-toggle{
+  width:100%;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:5px;
+  padding:5px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  background:var(--surface-2);
+}
+.theme-toggle button{border:0;border-radius:999px;padding:10px;background:transparent;cursor:pointer}
+.theme-toggle button.active{background:var(--strong);color:var(--strong-text)}
+.drawer-note{color:var(--muted);font-size:13px}
+@media(max-width:620px){
+  .shell{padding:0 13px 100px}
+  .app-head{padding-top:20px}
+  .app-subtitle{font-size:13px}
+  .view-tabs{top:0}
+  .date-heading{top:62px}
+  .card-main{grid-template-columns:42px minmax(0,1fr);padding:15px 13px}
+  .heart{width:39px;height:39px}
+  .card-extra{padding-left:67px;padding-right:13px}
+  .artist-name{font-size:18px}
+  .card-hook{font-size:14px}
+}
+@media(min-width:760px){
+  .card-list{grid-template-columns:1fr 1fr}
+  .show-card.open{grid-column:1/-1}
+}
+
+/* v10 — auxiliary table view, available only through the drawer */
+.table-view{padding:4px 0 70px}
+.table-intro{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  gap:18px;
+  margin:14px 0 18px;
+}
+.table-intro h2{margin:0;font-size:30px;letter-spacing:-.04em}
+.table-intro p{margin:8px 0 0;color:var(--muted);max-width:560px}
+.table-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.table-scroll{
+  overflow:auto;
+  max-height:72vh;
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:var(--surface);
+  overscroll-behavior:auto;
+  -webkit-overflow-scrolling:touch;
+}
+.table-inner{
+  position:relative;
+  min-width:max-content;
+  width:max-content;
+}
+.table-head{
+  position:sticky;
+  top:0;
+  z-index:8;
+  display:grid;
+  grid-template-columns:64px repeat(var(--stage-count),190px);
+  background:var(--strong);
+  color:var(--strong-text);
+}
+.table-head > div{
+  padding:12px 10px;
+  border-right:1px solid color-mix(in srgb,var(--strong-text) 20%,transparent);
+  font-size:12px;
+  font-weight:750;
+}
+.table-grid{
+  position:relative;
+  display:grid;
+  grid-template-columns:64px repeat(var(--stage-count),190px);
+  height:var(--table-height);
+}
+.table-axis{position:relative;border-right:1px solid var(--line)}
+.table-hour{
+  position:absolute;
+  right:8px;
+  transform:translateY(-50%);
+  color:var(--muted);
+  font-size:10px;
+  font-variant-numeric:tabular-nums;
+}
+.table-lane{
+  position:relative;
+  border-right:1px solid var(--line);
+  background-image:repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent calc(var(--hour-height) - 1px),
+    var(--line) calc(var(--hour-height) - 1px),
+    var(--line) var(--hour-height)
+  );
+}
+.table-card{
+  position:absolute;
+  left:5px;
+  right:5px;
+  min-height:36px;
+  padding:6px 26px 6px 7px;
+  border:1px solid var(--text);
+  border-radius:9px;
+  background:var(--surface);
+  overflow:hidden;
+  cursor:pointer;
+  box-shadow:0 2px 0 color-mix(in srgb,var(--text) 8%,transparent);
+}
+.table-card.conflict{outline:2px solid var(--text);outline-offset:2px}
+.table-card-time{font-size:9px;color:var(--muted)}
+.table-card-name{
+  display:block;
+  margin-top:2px;
+  font-size:12px;
+  line-height:1.08;
+  font-weight:800;
+  overflow-wrap:anywhere;
+}
+.table-remove{
+  position:absolute;
+  right:4px;
+  top:4px;
+  width:21px;
+  height:21px;
+  padding:0;
+  border:1px solid var(--text);
+  border-radius:999px;
+  background:var(--surface);
+  color:var(--text);
+  cursor:pointer;
+}
+.table-date-line{
+  position:absolute;
+  left:0;
+  right:0;
+  z-index:5;
+  border-top:2px solid var(--text);
+  pointer-events:none;
+}
+.table-date-label{
+  position:sticky;
+  left:70px;
+  display:inline-block;
+  transform:translateY(-50%);
+  padding:4px 9px;
+  border-radius:999px;
+  background:var(--text);
+  color:var(--bg);
+  font-size:10px;
+  font-weight:750;
+}
+.table-empty{
+  padding:65px 20px;
+  text-align:center;
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+}
+@media(max-width:620px){
+  .table-view{
+    width:calc(100% + 26px);
+    margin-left:-13px;
+    margin-right:-13px;
+  }
+  .table-intro{padding:0 13px;align-items:flex-start;flex-direction:column}
+  .table-scroll{border-left:0;border-right:0;border-radius:0;max-height:none}
+  .table-head,.table-grid{grid-template-columns:54px repeat(var(--stage-count),170px)}
+}
+
+
+body.table-mode .filters{display:none}
+body.table-mode .view-tabs{display:none}
+body.table-mode .app-subtitle{display:none}
+
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="app-head">
+    <div>
+      <h1 class="app-title">LINEUP<br>GUIDE</h1>
+      <p class="app-subtitle">Полная программа и персональный маршрут — без таблиц, с описаниями, избранным и заметками.</p>
+    </div>
+  </header>
+
+  <nav class="view-tabs" aria-label="Разделы">
+    <button class="view-tab active" data-view="all">Полный лайнап</button>
+    <button class="view-tab" data-view="mine">Мой лайнап <span class="tab-count" id="favoriteCount">0</span></button>
+  </nav>
+
+  <section class="filters">
+    <div>
+      <div class="filter-label"><span>Дата</span><button class="more-button" id="resetFilters" type="button">Сбросить</button></div>
+      <div class="chip-row" id="dateChips"></div>
+    </div>
+    <div>
+      <div class="filter-label"><span>Сцена</span><span id="resultCount"></span></div>
+      <div class="chip-row" id="stageChips"></div>
+    </div>
+  </section>
+
+  <main id="app"></main>
+</div>
+
+<button class="menu-button" id="menuButton" type="button" aria-expanded="false">
+  <span class="menu-icon"><i></i><i></i><i></i></span><strong>Меню</strong>
+</button>
+<div class="backdrop" id="backdrop"></div>
+<aside class="drawer" id="drawer">
+  <h2>Меню</h2>
+  <div class="drawer-nav">
+    <button type="button" data-drawer-view="all"><span>Полный лайнап</span><span>→</span></button>
+    <button type="button" data-drawer-view="mine"><span>Мой лайнап</span><span id="drawerFavoriteCount">0</span></button>
+    <button type="button" data-drawer-view="table"><span>Таблица пересечений</span><span>↗</span></button>
+  </div>
+  <section class="drawer-section">
+    <span class="drawer-label">Оформление</span>
+    <div class="theme-toggle">
+      <button type="button" data-theme-choice="light">Светлое</button>
+      <button type="button" data-theme-choice="dark">Тёмное</button>
+    </div>
+  </section>
+  <section class="drawer-section">
+    <span class="drawer-label">Данные</span>
+    <button class="action" id="clearNotes" type="button">Удалить все заметки</button>
+  </section>
+  <p class="drawer-note">Избранное, заметки, тема и последние выбранные фильтры хранятся только в этом браузере.</p>
+</aside>
+
+<script id="lineup" type="text/plain">МЕЙН
+чт
+21:00 OID ✕ Sila Sveta ~ AV-live
+22:00 Flaty ~ AV-live
+23:00 MAGMA ~ AV-перформанс
+
+пт
+21:00 Finetune ✕ Sila Sveta ~ AV-live
+22:00 Tesla ~ live
+23:00 Ivan Logos
+01:00 Derrick May 🇺🇸
+03:00 Locked Club
+04:30 Partia
+05:30 Nienshanz
+06:30 Siberra
+
+сб
+22:00 Благодетелев ~ AV-live
+23:00 Eye Que
+00:00 Sestrica ~ live
+01:00 Atom™ 🇨🇱 ~ live
+02:00 CPSL
+03:30 Poima ~ live
+04:30 Raumtester
+06:00 Dob-S
+
+САН
+чт
+19:00 Ragon Bal
+20:00 Дышать
+21:00 Озёра
+
+пт
+18:00 Алексей Ховалыг
+19:00 Soft Blade
+20:00 тима ищет свет
+21:00 Mirèle
+
+сб
+18:00 Tremakasi
+19:00 Размаха и Два Обреза
+20:00 Жанна Агузарова
+21:00 Хаски
+22:00 Icegergert
+
+вс
+18:00 The Bathroom Producers
+19:00 Вентоулин
+20:00 Grad!ent
+
+ВУДЗ
+чт
+21:00 J.P
+23:00 Michael Dop
+01:00 A Guy Called Gerald
+02:00 Rvbbt
+04:00 4+4: OL b2b Flaty b2b Vtgnike b2b low808
+
+пт
+21:00 Hoopa
+23:00 El
+01:00 DJ Jus-Ed 🇺🇸
+03:00 Cezar 🇷🇴
+05:00 Tania Vulcano 🇺🇾 🇪🇸
+07:00 Zots
+09:00 beennooutside ~ live
+09:30 Wei
+11:00 Les
+13:00 Vlas Leskin
+15:00 Novikov
+17:00 Artem Orlov
+19:00 Orbet
+
+сб
+21:00 Innerlight
+23:00 Karl Chix
+01:00 Abelle
+03:00 Daniel Bell 🇺🇸
+05:00 Cabanne 🇫🇷
+07:00 Denis Kaznacheev
+09:00 Piticu 🇷🇴
+11:00 Stab9
+13:00 Daox 🇲🇦
+15:00 Mihael Simic 🇨🇭
+17:00 b0n
+19:00 Ballu
+
+вс
+21:00 Denis Kostitsyn
+23:00 Denis Korablev
+01:00 Childplay 🇹🇷
+03:00 Nechkin
+05:00 Cancelled
+07:00 Gevorg Simonyan
+09:00 Tagir
+
+НЕОН
+чт
+21:30 Timur Omar
+23:00 Лето в городе ~ live
+00:00 Eiger Drums Propaganda 🇫🇷 ~ live
+01:00 Séxstasy
+03:00 Hespermen
+
+пт
+21:00 Andrey Kling
+23:00 Violetov General 🇧🇬 ~ live
+00:00 Timur Ptahin ~ live
+01:00 Ildar Iksanov
+02:30 Mick Wills 🇩🇪
+04:30 Blackmoon77 🇩🇪
+06:00 Bogdamn
+08:00 Sharvari Piroska
+
+сб
+21:00 LVRIN
+23:00 Rambal Cochet ~ live
+00:00 Flüchtlink ~ live
+01:00 Sacha Mambo 🇫🇷
+03:00 Simple Symmetry
+05:00 Ron Morelli 🇺🇸 🇫🇷
+06:30 Lipelis
+08:00 Sputnik & Mashkov
+
+вс
+11:00 Michael Dop
+13:00 Izhevski
+15:00 Agraba
+17:00 Geju
+
+БЛОК
+пт
+22:00 Dressel Amorosi 🇮🇹 ~ live
+23:00 Труд ~ live
+00:00 Vahan Stepanyan 🇦🇲
+01:00 Utah
+02:00 DJ Pierre 🇺🇸
+03:30 Sofia Rodina
+05:00 Angelina
+06:00 Roma Ptashenko
+
+сб
+22:00 Досада ~ live
+23:00 Психея ~ live
+00:00 Maksimovna
+01:00 Станция метро Горьковская
+02:00 Errortica
+03:00 Kovyazin D ~ live
+04:00 Mark S ~ live
+05:00 Hipushit
+
+БАЛКОН
+пт
+20:00 KRLW & Timur Omar
+22:00 Мироходец ~ AV-перформанс
+22:15 Дорогой Сережа ~ live
+23:00 Мироходец ~ AV-перформанс
+23:15 Zombierella
+00:30 The Squidbillys ~ live
+01:30 Караван Историй ~ live
+02:30 Pale Blue Mack
+04:30 Таня Ротарь
+
+сб
+20:00 Tanya Andrianova
+21:30 Мироходец ~ AV-перформанс
+21:45 Starlight Jazz Trio ~ live
+22:45 Мироходец ~ AV-перформанс
+23:00 Artem Baskakov Trio ~ live
+00:00 The Sunboys ~ live
+01:00 Putana Orangutana ~ live
+02:00 Ranishe Niyaak
+03:30 Ural Massif
+05:00 Mesr
+
+ДАРК
+пт
+21:00 Студия новой музыки “Анатомия звука” ~ академический концерт / спектрализм
+22:00 Valentin Fufaev ~ live
+23:00 Taya + Agnes Paz ~ шоу: колокол, терменвокс
+00:00 Lacrima ~ перформанс
+01:00 Saraf ~ перформанс
+02:00 Owuo ~ шоу
+03:00 Николай Пряженцев
+04:00 Atoraye ~ live
+
+сб
+20:00 AMA “Ангелос” ~ хореографическая постановка
+21:00 Вильгений Мельников, Дмитрий Ануфриев “Потерянный горизонт × Электрохолм” ~ перформанс
+22:00 Зорин-Арт Плюс “Дыхание света” ~ аудио-визуальный перформанс
+23:00 Ad Usum Delphini 🇧🇬 ~ live
+00:00 Sergey Komarov vs Settima Tacca ~ live
+01:30 Akroama ~ live
+02:30 Grima ~ шоу
+03:30 Черные Бояре
+04:30 Moino ~ live
+05:30 DJ Sofi Sollar
+
+СТЕЛЛА
+чт
+23:00 Inoplanegong & Orlov-Davydovsky
+00:00 Lena Tsibizova & Piper Spray ~ live
+01:00 OL~ live
+02:00 Николай Козлов ~ live
+03:00 Poima ~ live
+04:00 FMSAO
+
+пт
+17:00 SERKH
+18:00 SENSONICA “Аудионаблюдение” ~ перформанс
+19:00 Svastha ~ live
+20:00 VibroSoundLab ~ live
+21:00 Dmitry Lu
+22:00 mishxn ~ live
+23:00 Digital Moss ~ live
+00:00 Nikita Zabelin ~ live
+01:00 Heinrich Dressel + Sonobe 🇮🇹
+02:00 Ural Massif
+04:00 Hipushit
+06:00 Utah
+
+сб
+17:00 Bogdamn
+19:00 Асаркан ~ live
+20:00 Артем Галкин ~ live
+21:00 Sophia Zhuravkova
+23:00 Mark Esin ~ live
+00:00 Push’n’Pull ~ live
+01:00 Lisokot & Vikhornov feat. Сhoir(∞)
+02:00 Electric Blue
+04:00 xpl0re
+06:00 Denis Korablev
+
+БАР У РЕКИ
+пт
+22:00 Tanya Andrianova
+00:00 Egor Holkin
+02:00 Ron Morelli 🇺🇸 🇫🇷
+04:00 Orange
+06:00 Pirumov
+
+сб
+23:00 Sofiya Muntyan
+00:00 Igor Kompaniets
+02:00 Kito Jempere
+04:00 Mark Schedrin
+06:00 Sacha Mambo 🇫🇷
+08:00 Kaisou</script>
+<script>
+const bios={"A Guy Called Gerald":{"hook":"Манчестерский пионер эйсид-хауса и раннего британского рейва.","bio":"Джеральд Симпсон участвовал в создании 808 State, а затем построил сольную карьеру на стыке эйсид-хауса, техно, брейкбита и раннего джангла. Его выступление интересно не только как встреча с исторической фигурой: он до сих пор играет музыку как живую, изменяемую систему, а не как музейную реконструкцию 1980-х.","why":"Редкий шанс услышать человека, который стоял у истоков нескольких ветвей британской клубной музыки.","sources":["https://aguylcalledgerald.com/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Derrick May":{"hook":"Одна из ключевых фигур детройтского техно — эмоционального, стремительного и футуристичного.","bio":"Деррик Мэй входит в так называемую бельвильскую тройку вместе с Хуаном Аткинсом и Кевином Сондерсоном. Его подход добавил раннему техно драматизм, джазовую свободу и почти оркестровое ощущение движения. На фестивале важнее всего не отдельные треки, а то, как он строит напряжение и выпускает энергию танцпола.","why":"Историческая значимость плюс непредсказуемый, очень физический стиль сведения.","sources":["https://ra.co/dj/derrickmay","https://outlinefestival.org/feed/outline-2026-timetable/"]},"DJ Pierre":{"hook":"Пионер чикагского эйсид-хауса и один из авторов языка Roland TB-303.","bio":"Натаниэль Пьер Джонс прославился как участник Phuture и соавтор Acid Trax — записи, вокруг которой сформировалось само понятие эйсид-хауса. Позже он развил технику wild pitch: длинные, постепенно раскрывающиеся миксы с фильтрами и нарастающим гипнозом.","why":"Можно буквально услышать первоисточник огромного пласта современной клубной музыки.","sources":["https://djpierre.com/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Atom™":{"hook":"Увэ Шмидт — концептуалист электронной музыки, соединяющий техно, цифровой поп и строгий саунд-дизайн.","bio":"Немецкий продюсер, много лет живущий в Чили, известен десятками псевдонимов и постоянными сменами эстетики. Он может быть холодным и математичным, ироничным, танцевальным или почти академическим. На Outline заявлен live, поэтому стоит ждать не DJ-сет, а авторскую программу с собственной драматургией.","why":"Один из самых интеллектуально собранных и технологически точных лайвов программы.","sources":["https://atom-tm.com/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Daniel Bell":{"hook":"Минимал-техно без лишних деталей: упругий грув, микросдвиги и гипноз.","bio":"Американский продюсер и диджей, связанный с ранней сценой Детройта и проектом Cybersonik. Под именем DBX он сформировал один из канонических вариантов минимал-техно: музыка держится не на эффектных дропах, а на крошечных изменениях ритма и тембра.","why":"Для тех, кто любит долгий танец и ощущение, что грув постепенно перестраивает восприятие времени.","sources":["https://ra.co/dj/danielbell","https://outlinefestival.org/feed/outline-2026-timetable/"]},"DJ Jus-Ed":{"hook":"Шершавый, честный хаус из Бруклина — музыка ночного клуба без полировки.","bio":"Эдвард Маккайтен — диджей, продюсер и основатель Underground Quality. Его сеты ценят за глубокий хаус, виниловую фактуру и ощущение настоящего клубного процесса, где небольшие несовершенства только усиливают живость.","why":"Особенно уместен на ВУДЗ: это музыка для длинного лесного танцпола, а не для короткого шоу.","sources":["https://undergroundquality.com/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Cabanne":{"hook":"Французский минимал с джазовой пластикой и очень тонкой работой с ритмом.","bio":"Жан-Гийом Кабан — один из заметных авторов французской микрохаус-сцены. Его музыка кажется сдержанной, но внутри постоянно движутся мелкие перкуссионные детали, срезанные голоса и упругий бас.","why":"Хороший выбор для слушателя, которому интереснее сложный грув, чем крупные драматические дропы.","sources":["https://ra.co/dj/cabanne","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Cezar":{"hook":"Румынский минимал: длинные формы, невесомая перкуссия и почти незаметные переходы.","bio":"Бухарестский диджей Cezar связан со сценой, которую часто называют rominimal. Его сеты строятся медленно и требуют времени: музыка раскрывается через микродетали, пространство и точное управление плотностью ритма.","why":"Нужно слушать не десять минут, а хотя бы часть длинной дуги — тогда проявляется мастерство.","sources":["https://ra.co/dj/cezar","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Piticu":{"hook":"Глубокий румынский минимал с тёплым басом и психоделической детализацией.","bio":"Piticu — представитель бухарестской клубной школы, известной длинными виниловыми сетами и вниманием к малейшим изменениям грува. Это не музыка мгновенного эффекта, а медленное погружение.","why":"Подойдёт для утреннего или дневного продолжения танца, когда хочется мягкости без потери ритма.","sources":["https://ra.co/dj/piticu","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Tania Vulcano":{"hook":"Одна из фигур, сформировавших клубную идентичность Ибицы вне коммерческого EDM.","bio":"Уругвайско-испанская диджейка много лет была связана с Circoloco и DC-10. Её стиль держится на хаусе и техно с упругим, солнечным, но не попсовым грувом.","why":"Опыт большого танцпола и умение долго удерживать людей без дешёвых эффектов.","sources":["https://ra.co/dj/taniavulcano","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Ron Morelli":{"hook":"Глава L.I.E.S. — сырой хаус, индустриальный техно-фанк и музыка с намеренно шероховатой поверхностью.","bio":"Нью-йоркский диджей и куратор лейбла Long Island Electrical Systems помог вывести в центр внимания целую волну грязного, аналогового и жанрово свободного клубного звука. Его сеты могут резко менять направление, но сохраняют мрачную физическую энергию.","why":"Стоит идти за характером, риском и отказом от слишком гладкого клубного саунда.","sources":["https://liesrecords.bandcamp.com/","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Mick Wills":{"hook":"Немецкий виниловый селектор с любовью к EBM, синтезаторному андеграунду и странной танцевальной музыке.","bio":"Мик Уиллс десятилетиями собирает редкие записи на границе электро, wave, итало, техно и индустриального диско. Его ценность — не авторский каталог, а глубина коллекции и способность находить забытые треки, звучащие современнее новых.","why":"Один из лучших вариантов для музыкального открытия, а не только для узнаваемых хитов.","sources":["https://ra.co/dj/mickwills","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Sacha Mambo":{"hook":"Эклектичный французский селектор: космическое диско, психоделика, wave и странный хаус.","bio":"Саша Мамбо известен как коллекционер и участник проекта Macadam Mambo. Его сеты трудно свести к одному жанру: они работают как путешествие по редкой европейской и мировой танцевальной музыке.","why":"Подойдёт тем, кто устал от однообразного техно и хочет неожиданной смены красок.","sources":["https://macadammambo.bandcamp.com/","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Locked Club":{"hook":"Российский электронный панк: брейкбит, электро, габберная резкость и неконтролируемая энергия.","bio":"Дуэт превратил клубную музыку в почти концертный аттракцион — с агрессивной подачей, юмором и эстетикой уличного хаоса. Даже в DJ-формате от них стоит ждать резких переходов и повышенной плотности.","why":"Один из самых прямых вариантов для пикового выброса энергии.","sources":["https://lockedclub.bandcamp.com/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Soft Blade":{"hook":"Меланхоличный русскоязычный поп, синтезаторная хрупкость и очень личная интонация.","bio":"Сольный проект Софьи Родиной соединяет электронный поп, постпанковую отстранённость и камерную исповедальность. Это скорее концерт для внимательного слушания, чем фоновая фестивальная музыка.","why":"Хорошая эмоциональная пауза между танцевальными сценами.","sources":["https://softblade.bandcamp.com/","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Хаски":{"hook":"Плотный авторский рэп, где мрачная образность важнее привычной хитовой структуры.","bio":"Российский рэпер строит тексты из резких визуальных образов, бытовой тревоги и социальной гротескности. Вживую материал обычно звучит тяжелее и телеснее студийных записей.","why":"Сильный текстовый и сценический опыт даже для тех, кто редко слушает рэп.","sources":["https://husky.bandcamp.com/","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Жанна Агузарова":{"hook":"Культовая фигура русского рока и поп-авангарда с голосом, который невозможно перепутать.","bio":"Бывшая вокалистка группы Браво создала собственный эксцентричный образ на пересечении рок-н-ролла, ретро-попа и космического театра. Её фестивальное появление интересно как редкий контакт с артисткой, давно вышедшей за рамки обычной поп-карьеры.","why":"Редкость, харизма и набор песен, знакомых нескольким поколениям.","sources":["https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"тима ищет свет":{"hook":"Романтичный инди-поп с уязвимой вокальной подачей и крупными эмоциональными припевами.","bio":"Проект Тимы Якимова работает с темами близости, одиночества и взросления. Музыка сочетает гитарный инди, электронную фактуру и поп-мелодику.","why":"Подойдёт для вечернего концерта, когда хочется песен и эмоционального контакта, а не абстрактного грува.","sources":["https://outlinefestival.org/feed/outline-2026-timetable/"]},"Mirèle":{"hook":"Мягкий экспериментальный поп: интимный вокал, электроника и ощущение сна.","bio":"Ева Краузе строит песни на тонком балансе между поп-мелодией, lo-fi-фактурой и необычной аранжировкой. Материал обычно раскрывается через настроение и детали, а не через мощность.","why":"Хороший выбор для спокойного, внимательного прослушивания на закате.","sources":["https://mirele.bandcamp.com/","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Poima":{"hook":"Российская экспериментальная электроника с ритуальной ритмикой и телесным live-звуком.","bio":"Проект работает на пересечении техно, бас-музыки, индустриальной фактуры и импровизации. Именно live-формат важен: композиции могут заметно меняться и собираться заново прямо на сцене.","why":"Перспективный выбор для тех, кому хочется не просто DJ-сета, а ощущения происходящего здесь и сейчас.","sources":["https://poima.bandcamp.com/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Nikita Zabelin":{"hook":"Техно-продюсер, который относится к звуку как к архитектуре и медиаискусству.","bio":"Никита Забелин связан с московской техно-сценой, Resonance Moscow и многочисленными междисциплинарными проектами. В live-формате он делает акцент на собственной звуковой системе, напряжении и пространственной драматургии.","why":"Стоит смотреть целиком и обращать внимание не только на ритм, но и на развитие формы.","sources":["https://resonancemoscow.bandcamp.com/","https://outlinefestival.org/feed/2026-stella/"]},"Heinrich Dressel + Sonobe":{"hook":"Итальянская ретрофутуристика: аналоговые синтезаторы, хоррор-саундтреки и космический эмбиент.","bio":"Heinrich Dressel — продюсер и основатель MinimalRome, работающий с электро и эстетикой научной фантастики 1970–80-х. Sonobe — проект саунд-дизайнера Valerio Baiocchi; вместе они соединяют винтажную кинематографичность и медленное синтезаторное пространство.","why":"Один из самых атмосферных и визуально воображаемых проектов СТЕЛЛЫ.","sources":["https://minimalrome.bandcamp.com/","https://outlinefestival.org/feed/2026-stella/"]},"OID ✕ Sila Sveta":{"hook":"Большое аудиовизуальное открытие, где музыка проектируется вместе со светом и архитектурой сцены.","bio":"Sila Sveta — международная студия мультимедийного дизайна, известная масштабными световыми и проекционными постановками. В коллаборации с OID визуальная система становится полноценным участником лайва, а не декорацией.","why":"Смотреть нужно с хорошей точки обзора и целиком: ценность здесь в синхронизации пространства, света и звука.","sources":["https://silasveta.com/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Finetune ✕ Sila Sveta":{"hook":"Музыкально-визуальная коллаборация, рассчитанная именно на масштаб главной сцены.","bio":"Sila Sveta работает со светом, видео и сценической архитектурой как с единым инструментом. Finetune отвечает за музыкальную основу, поэтому шоу стоит воспринимать как цельное произведение, а не как обычный концерт с экраном.","why":"Формат, который невозможно полноценно оценить по одному аудиотреку.","sources":["https://silasveta.com/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"MAGMA":{"hook":"Междисциплинарный AV-перформанс с хореографией, генеративной графикой и электронной музыкой.","bio":"Проект объединяет режиссуру и хореографию Ирины Малой, музыку xandr.vasiliev, визуальное искусство Newnome Beauton и команду перформеров. Здесь нет одного фронтмена: смысл рождается из взаимодействия тела, изображения и звука.","why":"Идти как на современный спектакль, а не как на DJ-сет.","sources":["https://t.me/s/outlinefestival","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Благодетелев":{"hook":"Аудиовизуальный live на основе авторского «информационного синтезатора».","bio":"Сергей Благодетелев представляет программу Brutal Flowers. Визуальный слой опирается на природные рекурсивные алгоритмы, поэтому изображение развивается как живая система вместе со звуком.","why":"Интересен именно как технологическое художественное высказывание.","sources":["https://t.me/s/outlinefestival","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Tesla":{"hook":"Техно-поэзия и электронный артхаус вокруг проекта Никиты Забелина.","bio":"Tesla — расширенный сценический проект с приглашёнными музыкантами и артистами. Он соединяет техно, голос, живые элементы и медиаискусство, поэтому ожидается скорее постановка, чем линейный клубный live.","why":"Один из проектов, которые лучше не дробить на короткое посещение.","sources":["https://resonancemoscow.bandcamp.com/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Flaty":{"hook":"Ломаная футуристичная электроника: bass, деконструированный клубный звук и цифровая пластика.","bio":"Российский продюсер Евгений Фадеев известен сольными работами, проектами AEM Rhythm-Cascade и GOST ZVUK-средой. Его музыка часто соединяет сложный ритм, абстрактный саунд-дизайн и неожиданную мелодичность.","why":"Подойдёт тем, кому интересен современный клубный авангард и нестандартная ритмика.","sources":["https://flaty.bandcamp.com/","https://gostzvuk.bandcamp.com/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"OL":{"hook":"Гибридный клубный продюсер: хаус, брейкбит, jungle и ломаная пострейвовая ритмика.","bio":"OL связан с московской электронной сценой и лейблом ГОСТ ЗВУК. Его музыка подвижна и жанрово неустойчива: он может переходить от мягкого грува к резким брейкам и басовым конструкциям.","why":"Хороший выбор, когда хочется клубной музыки без жанрового коридора.","sources":["https://gostzvuk.bandcamp.com/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Vtgnike":{"hook":"Один из авторов узнаваемой московской пострейвовой электроники.","bio":"Vtgnike сочетает house, jungle, ambient и фрагменты повседневного городского звука. Его подход важен для эстетики ГОСТ ЗВУК: музыка одновременно тёплая, странная и слегка отстранённая.","why":"В b2b-формате особенно интересно услышать, как его вкус сталкивается с другими участниками.","sources":["https://gostzvuk.bandcamp.com/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Lipelis":{"hook":"Эклектичный продюсер и селектор: диско, электро, хаус, фанк и неожиданные поп-кривые.","bio":"Леонид Липелис известен одновременно клубными релизами, ремиксами и очень широкими DJ-сетами. Он умеет соединять редкую музыку и понятный танцевальный импульс без ощущения жанровой лекции.","why":"Надёжный вариант для живого, разнообразного танцпола.","sources":["https://ra.co/dj/lipelis","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Simple Symmetry":{"hook":"Психоделическая клубная музыка с восточными мотивами, живой перкуссией и диско-гипнозом.","bio":"Братья Саша и Сергей Липские строят музыку на повторении, ритуальном груве и ярких инструментальных деталях. Их треки одинаково хорошо работают как клубный материал и как причудливый live-band саунд.","why":"Один из самых узнаваемых локальных проектов для ночного, слегка сюрреалистического танца.","sources":["https://simplesymmetry.bandcamp.com/","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Vентоулин":{"hook":"Ироничная и очень живая электроника на стыке синти-попа, танцевального перформанса и DIY.","bio":"Чешский проект David Doubek строит выступления вокруг аналоговых синтезаторов, голоса и намеренно простого, почти домашнего сценического языка.","why":"Стоит идти не за идеальной техникой, а за обаянием, юмором и непосредственной энергетикой.","sources":["https://ventolin.bandcamp.com/","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Вентоулин":{"hook":"Ироничная и очень живая электроника на стыке синти-попа, танцевального перформанса и DIY.","bio":"Чешский проект David Doubek строит выступления вокруг аналоговых синтезаторов, голоса и намеренно простого, почти домашнего сценического языка.","why":"Стоит идти не за идеальной техникой, а за обаянием, юмором и непосредственной энергетикой.","sources":["https://ventolin.bandcamp.com/","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Ivan Logos":{"hook":"Продюсер фестивальных пространств, для которого музыка, архитектура и медиаарт существуют как единая система.","bio":"Иван Логос — основатель и музыкальный идеолог петербургского Gamma Festival и платформы m_division. Более двух десятилетий он работает на пересечении электронной музыки, индустриальной архитектуры и мультимедийного искусства; его DJ-сеты наследуют эту кураторскую логику и соединяют техно с более абстрактным и кинематографичным материалом.","why":"На МЕЙНЕ стоит следить не только за отдельными треками, но и за тем, как он выстраивает масштаб и подготавливает пространство к ночным хедлайнерам.","sources":["https://gammafestival.ru/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Partia":{"hook":"Петербургский электронный дуэт и участники сообщества Kontrkult.","bio":"Partia называют себя «коалицией электронной музыки»: проект работает с техно, электро, ломаным ритмом и жёсткой синтезаторной фактурой. Дуэт выпускал собственный материал и регулярно появлялся в программах Kontrkult — петербургского объединения, известного поп-апами и нетипичными городскими локациями.","why":"Их поздненочной сет должен продолжить энергию Locked Club, но сделать её менее панковой и более машинно-гипнотической.","sources":["https://partia.bandcamp.com/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Nienshanz":{"hook":"Один из организаторов и резидентов петербургского объединения Kontrkult.","bio":"Nienshanz работает одновременно как диджей, куратор и участник команды, развивающей независимую электронную сцену Петербурга. Его музыкальный контекст — современное техно, электро и быстрый клубный звук, а опыт организации событий помогает мыслить не отдельными треками, а всей драматургией ночи.","why":"Предрассветный слот потребует не пиковых дропов, а точного удержания темпа после интенсивной ночи.","sources":["https://soundcloud.com/nienshanz","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Siberra":{"hook":"Петербургская диджейка из круга Kontrkult, работающая с быстрым и контрастным клубным материалом.","bio":"Siberra — резидентка Kontrkult и участница новой петербургской клубной волны. В сетах она соединяет техно, брейки, электро и трансовое напряжение, не привязываясь к одному строгому жанру.","why":"Заключительный утренний слот МЕЙНА — возможность услышать её не в режиме разогрева, а как автора финального эмоционального состояния сцены.","sources":["https://soundcloud.com/siberra","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Eye Que":{"hook":"Опытный диджей, промоутер и медиахудожник с многолетней историей в электронной сцене.","bio":"Eye Que участвует в российской клубной культуре с конца 1990-х, выступал на Outline, Signal, Gamma и Systo, а также создавал визуальные и медийные проекты. Его селекция опирается на техно, электро и психоделическую электронную музыку и обычно рассчитана на длинную, постепенно уплотняющуюся форму.","why":"На главной сцене он будет важен как связующее звено между концертным live Sestrica и концептуальным выступлением Atom™.","sources":["https://ra.co/dj/eyeque","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Sestrica":{"hook":"Авторский live с эмоциональным electro, ранним IDM и отголосками классического trance.","bio":"Sestrica пишет электронную музыку с 2016 года; среди её ориентиров — ранняя британская интеллектуальная электроника, electro и мелодическая клубная музыка 1990-х. Релизы выходили, в частности, на французском New Flesh Records, а собственный материал сочетает холодную машинную ритмику с человеческой меланхолией.","why":"Live-формат позволит услышать композиции как единую дугу, поэтому лучше прийти к началу, а не ловить один трек.","sources":["https://sestrica.bandcamp.com/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"CPSL":{"hook":"Московская продюсерка Resonance: холодное минималистичное techno, electro и точная ритмическая инженерия.","bio":"CPSL — сценическое имя Марии Веретенниковой. Она выпускалась на Clipp.art, Resonance Moscow, Dionysian Mysteries и Detroit Underground, вела авторские эфиры и выступала на крупных российских фестивалях. Её музыка экономна по форме, но богата микроскопическими изменениями тембра и ритма.","why":"Сразу после Atom™ её сет должен вернуть главную сцену от концептуального live к строгому, собранному танцу.","sources":["https://ra.co/dj/cpsl","https://resonancemoscow.bandcamp.com/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Raumtester":{"hook":"Модульное techno, трансовая эйфория и опыт queer-клубной сцены.","bio":"Raumtester — проект Сергея Елисеева, создателя вечеринок «Пир», бывшего резидента Popoff Kitchen и участника московского радио TESTFM. В лайвах и сетах он соединяет модульный синтез, techno, acid и эмоциональные трансовые линии.","why":"Его слот после Poima особенно интересен как переход от экспериментального live к более открытому и эйфоричному танцполу.","sources":["https://ra.co/dj/raumtester","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Dob-S":{"hook":"Ростовский диджей, куратор и культурный активист с сильным чувством ломаного ритма.","bio":"Dob-S — Сергей Добровольский, один из основателей ростовского клуба и сообщества ЛКМ, соорганизатор ERROR_404 и резидент Resonance Moscow. Его сеты соединяют techno, breaks, bass и leftfield-электронику, а опыт промоутера помогает мыслить архитектурой ночи.","why":"Финальный слот МЕЙНА должен прозвучать как содержательное завершение, а не механическое снижение энергии.","sources":["https://ra.co/dj/dob-s","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Ragon Bal":{"hook":"Осетинский ансамбль, возвращающий древние мелодии в живое современное звучание.","bio":"Ragon Bal появился во Владикавказе; название соединяет осетинское слово «ragon» — «древний» — и адаптированное обозначение ансамбля. Музыканты восстанавливают национальные инструменты и мелодии, но избегают музейной стилизации: материал звучит как действующая традиция, открытая импровизации и современному слушателю.","why":"Это редкое фестивальное выступление, где историческая память работает не декорацией, а полноценным музыкальным языком.","sources":["https://ragonbal.bandcamp.com/","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Дышать":{"hook":"Татарские интонации, переведённые на язык инди-попа и хип-хопа.","bio":"«Дышать» соединяет этнические татарские мотивы с современной песенной формой, электронным продакшеном и речитативом. Проект не копирует фольклор буквально, а использует его мелодику и ритмику как основу для мягкого, личного поп-звучания.","why":"На САН это хороший вход в концертную программу: музыка доступна сразу, но за мелодичностью стоит культурно конкретный материал.","sources":["https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Озёра":{"hook":"Возвращение нео-поп-проекта Лизы Громовой и Петара Мартича.","bio":"«Озёра» возникли в середине 2010-х как совместный проект Лизы Громовой и Петара Мартича и быстро стали заметным интернет-феноменом новой русскоязычной поп-сцены. Их песни соединяют разговорную близость, электронную аранжировку и интонацию молодой городской романтики; выступление Outline отмечает возвращение проекта.","why":"Стоит идти за редкой возможностью услышать песни, для многих связанные с конкретной эпохой русской инди-музыки.","sources":["https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Алексей Ховалыг":{"hook":"Народный хоомейжи Тывы и мультиинструменталист, владеющий основными стилями горлового пения.","bio":"Алексей Ховалыг представляет тувинскую вокальную традицию как живое искусство, а не этнографический номер. В его исполнении голос взаимодействует с традиционными инструментами и природной образностью степи; музыкант участвовал и в международных художественных проектах, включая Венецианскую биеннале.","why":"Это выступление нужно слушать близко и внимательно: главные события происходят внутри тембра, дыхания и обертонов.","sources":["https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Tremakasi":{"hook":"Екатеринбургский инструментальный ансамбль, соединяющий funk, jazz и музыку разных регионов мира.","bio":"Tremakasi строит аранжировки вокруг живого грува и необычного набора тембров: саксофона, ситара, сякухати, баса и ударных. В музыке слышны soul, funk, jazz, hip-hop-биты и интерес к азиатским и африканским традициям, но коллектив не превращает их в туристический коллаж.","why":"Начало субботней программы САН обещает быть ритмичным, инструментальным и заметно отличаться от последующего рэп-блока.","sources":["https://tremakasi.bandcamp.com/","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Размаха и Два Обреза":{"hook":"Уральский абсурдистский рэп, где reggae, drum’n’bass и new wave сталкиваются с театральной подачей.","bio":"Размаха — артистка из уральской независимой сцены, связанная с кругом Shabash Records и «Окурками Тем». Проект сознательно смешивает читку, пение, электронный грув и гротескный образ, не отделяя музыку от перформативной личности.","why":"Это концерт не столько ради жанровой чистоты, сколько ради языка, юмора и непредсказуемой смены ролей.","sources":["https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Icegergert":{"hook":"Один из заметных молодых российских рэперов: жёсткий trap, уличная мифология и холодная харизма.","bio":"Icegergert — Георгий Гергерт, артист объединения Gazgolder, получивший широкую известность благодаря релизам Royal Bastards и Ave. В программе Outline он представляет новую главу вокруг альбома «Глаз Бога»; его музыка строится на тяжёлом басе, коротких формулировках и образе контролируемой угрозы.","why":"Закрывающий слот САН рассчитан на массовый выброс энергии и резкий контраст с более авторским рэпом Хаски.","sources":["https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"The Bathroom Producers":{"hook":"Новая минская группа, соединяющая электронную детализацию с живой инди-группой.","bio":"The Bathroom Producers — коллектив Веры Крюлец, Александра Кононова, Антона Копытина и Арса Костсова. Дебютный альбом Romantic Collection вышел в 2026 году на People Can Listen и балансирует между IDM, downtempo, indie-pop и indie-rock.","why":"Их воскресный концерт интересен как возможность увидеть совсем свежий проект до того, как вокруг него закрепится одно жанровое определение.","sources":["https://thebathroomproducers.bandcamp.com/","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Grad!ent":{"hook":"Ростовский инди-проект Александра Зоткина с атмосферным поп-звучанием.","bio":"Grad!ent выпускает музыку с начала 2020-х; в дискографии есть альбомы «Градиент», «Нуар» и «Авангард». Песни соединяют альтернативный поп, гитарную меланхолию и аккуратную электронную обработку, оставаясь камерными даже в более масштабных аранжировках.","why":"Финал САН получится не громким, а созерцательным — хороший вариант мягко выйти из фестивального марафона.","sources":["https://music.apple.com/ru/artist/grad-ent/1543488717","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"J.P":{"hook":"Виниловый селектор и основатель ANVA Records, связанный с российской и испанской minimal-сценой.","bio":"J.P — сценическое имя Jack Petrenko. Он вырос в российской клубной среде, позднее обосновался в Испании и создал ANVA Records — платформу для minimal, microhouse и неторопливой экспериментальной танцевальной музыки.","why":"Открывающий сет ВУДЗ задаст не пиковую энергию, а акустику пространства и вкус всей многодневной лесной программы.","sources":["https://anvarecords.bandcamp.com/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Michael Dop":{"hook":"Диджей, художник и продюсер, который связывает музыку с визуальной культурой.","bio":"Михаил Комиссаров — сооснователь сообщества Slowdance и создатель проекта Finetune. Помимо DJ-практики, он работает с дизайном и визуальным искусством, поэтому его сеты часто строятся как тщательно отредактированные последовательности — от minimal и house до странной электроники и архивных находок.","why":"На ВУДЗ особенно важна его способность открыть длинную сессию и превратить музыкальную подборку в пространственную композицию.","sources":["https://soundcloud.com/michaeldop","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Rvbbt":{"hook":"Селектор и продюсер событий с бэкграундом в брейкдансе и любовью к ломаной клубной музыке.","bio":"Rvbbt — Антон, начинавший в Ижевске и позднее вошедший в московскую сцену. Его вкус формировался через брейкбит-культуру: в сетах встречаются electro, breakbeat, house, techno и trance, причём переходы часто подчинены телесной логике танца.","why":"После исторического live A Guy Called Gerald он сможет продолжить британскую брейковую линию, но уже из современного локального контекста.","sources":["https://soundcloud.com/rvbbt","https://outlinefestival.org/feed/outline-2026-timetable/"]},"4+4: OL b2b Flaty b2b Vtgnike b2b low808":{"hook":"Четырёхчасовая встреча ключевых участников орбиты ГОСТ ЗВУК.","bio":"OL, Flaty и Vtgnike — продюсеры, сформировавшие узнаваемую московскую пострейвовую электронику: house, jungle, ambient, bass и цифровой авангард. low808 — Ильдар Зайнетдинов, основатель и идеолог лейбла ГОСТ ЗВУК. Формат b2b превращает их каталоги и коллекции в коллективную импровизацию без одного главного автора.","why":"Это один из самых содержательных специальных сетов программы: лучше слушать длинный фрагмент и наблюдать, как четыре разных подхода начинают спорить и совпадать.","sources":["https://gostzvuk.bandcamp.com/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Hoopa":{"hook":"Петербургский диджей старой школы и участник сообщества Roots United.","bio":"Hoopa — Алекс Никитин, играющий с конца 2000-х. Он участвовал в развитии петербургских независимых вечеринок и фестивальной культуры вокруг Roots United и Present Perfect, а его музыкальный язык вырос из house, techno и редкой танцевальной виниловой музыки.","why":"Это сет человека, который умеет открывать пространство без суеты: ВУДЗ будет набираться глубины постепенно.","sources":["https://ra.co/dj/hoopa","https://outlinefestival.org/feed/outline-2026-timetable/"]},"El":{"hook":"Сооснователь Roots United и Present Perfect Festival — один из архитекторов современной клубной сцены Петербурга.","bio":"El много лет работает и как диджей, и как промоутер. Его деятельность помогла сформировать инфраструктуру независимой электронной музыки города, а сеты отличаются широким историческим диапазоном: от house и electro до более редких британских и европейских мутаций.","why":"После Hoopa это не случайная пара, а продолжение общего петербургского рассказа двумя разными коллекциями.","sources":["https://ra.co/dj/el1","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Zots":{"hook":"Ветеран московской сцены и резидент ARMA17 с инженерным отношением к звуку.","bio":"Андрей Зотс работает с клубной музыкой как диджей, продюсер и саунд-дизайнер. Его релизы выходили на Nervmusic и ARMA; в сетах minimal и tech-house соседствуют с breakbeat, electro и acid, а техническая точность не отменяет странных, психоделических решений.","why":"Утренний слот подходит его методу: музыка может быть сухой и функциональной, но постепенно становится всё более инопланетной.","sources":["https://ra.co/dj/andreyzots","https://outlinefestival.org/feed/outline-2026-timetable/"]},"beennooutside":{"hook":"Экспериментальный электронный продюсер, работающий с techno, bass и нестабильной цифровой фактурой.","bio":"beennooutside известен сольными работами и многолетним сотрудничеством с Wei. Его музыка тяготеет к деконструированному клубному звуку: тяжёлые низкие частоты, разорванные ритмы и атмосферные поля существуют на равных.","why":"Заявленный live даст возможность услышать не обычную подборку треков, а авторскую конструкцию с заранее продуманным развитием.","sources":["https://soundcloud.com/beennooutside","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Wei":{"hook":"Продюсер экспериментального techno и bass, связанный с совместной практикой beennooutside.","bio":"Wei, также использующий имя Wei.xzy, более семи лет создаёт музыку вместе с beennooutside и выпускает собственный материал. В работах встречаются индустриальные текстуры, тяжёлый sub-бас, абстрактный rhythm design и медленные атмосферные провалы.","why":"Его сет сразу после live партнёра позволит услышать, как общая студийная эстетика переводится в свободную DJ-селекцию.","sources":["https://soundcloud.com/weixzy","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Les":{"hook":"Московский селектор из минимал- и afterhours-круга, чья репутация строится на длинных сетах, а не публичном образе.","bio":"Les появляется в программах Outline и связанных с ним камерных клубных событий. По опубликованным миксам его область — minimal, microhouse и глубокая ритмическая музыка с большим количеством пространства между элементами; музыка развивается через небольшие смещения, а не через эффектные дропы.","why":"Дневной слот ВУДЗ подходит этому подходу: стоит задержаться хотя бы на несколько переходов и услышать, как меняется плотность грува.","sources":["https://soundcloud.com/outlinefestival","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Vlas Leskin":{"hook":"Московский диджей techno- и electro-сцены, ценящий строгую форму и глубокую селекцию.","bio":"Vlas Leskin регулярно играет на ARMA, Outline, Signal и в независимых клубных сериях. Его сеты движутся между hypnotic techno, electro, breaks и более редкими экспериментальными пластинками, не превращаясь в набор очевидных жанровых маркеров.","why":"Дневное время даст услышать структуру и детали, которые в ночном прайме могли бы потеряться за общей мощностью.","sources":["https://ra.co/dj/vlasleskin","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Novikov":{"hook":"Московский диджей нового techno-подполья, связанный с сообществом CHERTA.","bio":"Novikov регулярно появляется в программах CHERTA, Mutabor, RNDM и крупных фестивалей. По опубликованным миксам его язык — быстрое гипнотическое techno, trancy-синтез и более жёсткие индустриальные оттенки, собранные без популистских кульминаций.","why":"На ВУДЗ этот материал может прозвучать глубже, чем в закрытом клубе, но сохранит поступательное напряжение.","sources":["https://soundcloud.com/cherta-moscow","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Artem Orlov":{"hook":"Московский селектор, прошедший путь от барной культуры Simachev до крупных независимых фестивалей.","bio":"Артем Орлов много лет играет в московских заведениях и на фестивальных площадках, включая Present Perfect и Outline. Его сильная сторона — не собственный продюсерский каталог, а широкая коллекция: house, disco, leftfield и редкие танцевальные записи соединяются без демонстративной эклектики.","why":"Это дневной сет для смены тембра после более минималистичной части марафона.","sources":["https://soundcloud.com/outlinefestival","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Orbet":{"hook":"Московский продюсер и диджей с аналоговым взглядом на minimal и electro.","bio":"Orbet, также известный как участник дуэта Raborb, выпускался на Nervmusic, Slowdance, Mung и Exarde. Его треки строятся на упругой машинной перкуссии, странных синтезаторных голосах и тонкой психоделии, соединяя microhouse, electro и экспериментальный minimal.","why":"Вечерний слот обещает вернуть сцене плотность, не переходя к прямолинейному techno.","sources":["https://yoyaku.io/artist/orbet/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Innerlight":{"hook":"Сочинский диджей и промоутер, много лет развивающий локальную deep-сцену.","bio":"Innerlight — Вахтанг Чубинидзе, владелец DJ-бара Central Park и автор подкаста ilovedeepru, выходящего с начала 2010-х. Его селекция вырастает из deep house, minimal и мягкого tech-house, но ценится прежде всего за последовательность и тёплое клубное чувство.","why":"Он открывает субботний цикл ВУДЗ и должен собрать танцпол без резкого скачка интенсивности.","sources":["https://soundcloud.com/innerlight","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Karl Chix":{"hook":"Резидент ARMA и основатель коллектива WIP с более чем пятнадцатилетним опытом.","bio":"Karl Chix работает в московской электронной сцене как диджей, организатор и куратор. Его сетовая практика тяготеет к minimal, house и румынской школе, но в ней всегда заметен клубный опыт: музыка выбирается по функции в конкретный момент, а не по жанровой репутации.","why":"Прайм-тайм ВУДЗ позволит ему показать более напористую сторону, сохранив детальность и длинные переходы.","sources":["https://ra.co/dj/karlchix","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Abelle":{"hook":"Одна из центральных фигур ARMA — диджейка, куратор и руководитель лейбла.","bio":"Наташа Abelle участвует в истории ARMA17 с ранних лет и сегодня отвечает в том числе за развитие ARMA Records. Её сеты известны afterhours-чувством, тёмным house, minimal и techno, где драматургия важнее мгновенного эффекта.","why":"Она играет перед Daniel Bell, и это точное соседство: оба умеют делать из нескольких деталей полноценное часовое напряжение.","sources":["https://ra.co/dj/abelle","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Denis Kaznacheev":{"hook":"Сибирский продюсер, сооснователь Nervmusic и один из известных российских авторов абстрактного minimal.","bio":"Денис Казначеев живёт и работает между европейскими сценами; вместе с Владиславом Кореневым создал дуэт Easy Changes и лейбл Nervmusic. В его музыке microhouse соединяется с органическими записями, свободной синтезаторной импровизацией и почти сюрреалистическим монтажом.","why":"После Cabanne он продолжит линию интеллектуального minimal, но сделает её более неровной и экспериментальной.","sources":["https://ra.co/dj/deniskaznacheev","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Stab9":{"hook":"Московский продюсер deep- и minimal-сцены с длинной клубной историей.","bio":"Stab9 выпускал house, minimal, microhouse и dubby techno на Deepology и других локальных платформах и много лет появлялся в программах ARMA. Его музыка держится на эластичном басе и постепенном смещении перкуссионных деталей.","why":"Позднее утро ВУДЗ — естественная среда для такого материала: он сохраняет движение, не перегружая слух.","sources":["https://soundcloud.com/stab9","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Daox":{"hook":"Марокканский диджей, продюсер и один из создателей фестиваля MOGA.","bio":"Daox — Абдеслам Алауи из Касабланки, сооснователь и арт-директор MOGA Festival, связавшего электронную сцену Марокко с международной клубной сетью. Его музыкальный вкус тяготеет к minimal, house и тонкой перкуссии, но несёт опыт североафриканской культурной среды.","why":"Дневной сет интересен не экзотикой, а тем, как глобальная minimal-сцена звучит из другой точки происхождения.","sources":["https://ra.co/dj/daox","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Mihael Simic":{"hook":"Цюрихский диджей из швейцарской minimal-сцены вокруг клуба Supermarket.","bio":"Mihael Simic много лет участвует в локальной культуре Цюриха и серии Bermuda. Его сеты строятся вокруг microhouse, minimal и пружинящего tech-house с особым вниманием к виниловому звуку и незаметным переходам.","why":"Это дневное выступление для ценителей точного грува, а не ярких жанровых заявлений.","sources":["https://ra.co/dj/mihaelsimic","https://outlinefestival.org/feed/outline-2026-timetable/"]},"b0n":{"hook":"Молдавский продюсер глубокой клубной музыки на границе dub techno, microhouse и rominimal.","bio":"b0n выпускает лаконичные, пространственные треки, в которых бас и эхо работают почти архитектурно. Релизы Conceptual и Igla показывают интерес к микроскопической перкуссии, тёплому аналоговому шуму и румынской minimal-эстетике.","why":"После Mihael Simic его сет должен сохранить тонкую фактуру, но сделать пространство более тёмным и дубовым.","sources":["https://b0nmusic.bandcamp.com/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Ballu":{"hook":"Московский диджей из круга Resonance, известный яркой и подвижной танцевальной селекцией.","bio":"Ballu регулярно выступает на мероприятиях Resonance Moscow и независимых фестивалях. В отличие от самых аскетичных артистов ВУДЗ, он охотно соединяет electro, breaks, techno и более эмоциональные клубные формы, сохраняя андеграундную логику.","why":"Вечерний слот должен постепенно вывести длинный дневной поток к новой ночной интенсивности.","sources":["https://soundcloud.com/ballu","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Denis Kostitsyn":{"hook":"Музыкально образованный продюсер и резидент ARMA, работающий с house, breakbeat и techno.","bio":"Денис Костицын учился в консерваторской среде, а затем перенёс внимание к форме в электронную музыку. Его релизы, включая Back EP на Mung Records, соединяют пружинящий bass, breakbeat, tech-house и тонкие гармонические детали.","why":"Он открывает финальный цикл ВУДЗ: ожидается умный, но не сухой танцевальный сет.","sources":["https://ra.co/dj/deniskostitsyn","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Denis Korablev":{"hook":"Московский диджей, коллекционер и сооснователь лейбла BP Recs.","bio":"Денис Кораблёв связан с сериями Mind, Tooloop и ранними художественно-музыкальными объединениями ODY. Его коллекция охватывает minimal, electro, house и экспериментальную танцевальную музыку; сеты ценят за редкие записи и неторопливое раскрытие связей между ними.","why":"Поздний вечер ВУДЗ даст ему возможность построить полноценный рассказ, а не обслуживать один жанр.","sources":["https://ra.co/dj/deniskorablev","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Childplay":{"hook":"Стамбульский продюсер Mehmet Demir, развивающий microhouse и minimal как тонкую студийную форму.","bio":"Childplay получил образование в области управления исполнительскими искусствами и технологий звукозаписи. На его музыку повлияли Ricardo Villalobos, Matthew Herbert и Akufen: отсюда нарезанные микро-сэмплы, сухой грув и любовь к нестабильным бытовым звукам.","why":"Ночной сет будет особенно интересен слушателям, для которых minimal — не фон, а сложная работа со временем.","sources":["https://ra.co/dj/childplay","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Nechkin":{"hook":"Московский продюсер и диджей, соединяющий breaks, electro, microhouse и rominimal.","bio":"Константин Нечкин связан с Meduza Moscow и регулярно строит миксы преимущественно из собственного или близкого ему материала. Его почерк узнаваем: ломаная ритмика, пружинящий низ и слегка игровая синтезаторная пластика.","why":"После Childplay он сможет повысить скорость и сделать ночную секцию более нервной и угловатой.","sources":["https://ra.co/dj/nechkin","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Cancelled":{"hook":"Диджей, продюсер и промоутер с опытом московских клубов Gipsy, Rodnya и собственной серии UPDATE.","bio":"Cancelled играет с начала 2010-х и успел работать не только за пультом, но и букером и арт-директором. Его музыкальная территория — house и techno в широком смысле, от упругого клубного материала до более глубоких и психоделических треков.","why":"Предрассветный слот потребует именно этого промоутерского опыта: понимать уставший танцпол и не разрушать его лишней демонстративностью.","sources":["https://ra.co/dj/cancelled","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Gevorg Simonyan":{"hook":"Армянско-московский селектор, работающий с minimal и microhouse в длинной форме.","bio":"Геворг Симонян представлен в клубных архивах и микс-сериях сетами, где румынский minimal, deep house и dubby-текстуры развиваются почти без заметных швов. Его репутация строится прежде всего на живой селекции, а не на медийном образе.","why":"Утро ВУДЗ — оптимальный контекст: музыка не требует мгновенной реакции и постепенно перестраивает восприятие ритма.","sources":["https://www.mixcloud.com/gevorg-simonyan/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Tagir":{"hook":"Продюсер сложной электронной формы, участник Slowdance и создатель ANVA.","bio":"Тагир Садыбаев переехал в Москву в середине 2010-х, вошёл в сообщество Slowdance, выпустил альбом LF и участвовал в создании ANVA Records. Его музыка соединяет broken beat, electro, ambient и интеллектуальный minimal, часто избегая ровной четырёхдольной опоры.","why":"Финальный утренний сет станет не просто закрытием, а возможностью размыть границу между танцевальной музыкой и внимательным слушанием.","sources":["https://tagir.bandcamp.com/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Timur Omar":{"hook":"Диджей с конца 1990-х и один из опытнейших селекторов программы НЕОН.","bio":"Timur Omar впервые начал играть в клубах в 1998 году и прошёл через разные периоды московской и региональной сцены. Его ценность — огромный музыкальный словарь: disco, wave, house, electro и странная pop-музыка могут существовать в одном сете без ретро-ностальгии.","why":"Открывающий час НЕОНа должен сразу обозначить сцену как территорию вкуса и неожиданных связей, а не одного жанра.","sources":["https://soundcloud.com/timuromar","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Лето в городе":{"hook":"Ростовский live-проект с синтезаторным pop, новой волной и расслабленной южной интонацией.","bio":"«Лето в городе» выпускает музыку с начала 2010-х. В песнях сочетаются электронные барабаны, synth-pop, new wave, речитатив и лёгкий hip-hop-фьюжн; название хорошо передаёт их главный эффект — городской вечер, в котором меланхолия не отменяет движения.","why":"Это концертный, песенный эпизод внутри эклектичной НЕОН-программы, поэтому его лучше смотреть целиком.","sources":["https://music.apple.com/ru/artist/лето-в-городе/595868201","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Eiger Drums Propaganda":{"hook":"Французский live-проект Луи Эбола: барабанная машина, психоделия и грув вне обычного house-шаблона.","bio":"Eiger Drums Propaganda связан с музыкантом Louis Ebola, известным также как участник The Pilotwings. Проект выпускался на Macadam Mambo и попадал в программу европейской платформы SHAPE+; его музыка соединяет tribal-перкуссию, synth, dub и экспериментальное disco.","why":"Живой формат обещает не DJ-сведение, а физическую работу с ритмом — один из самых характерных концертов первого вечера.","sources":["https://eigerdrumspropaganda.bandcamp.com/","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Séxstasy":{"hook":"Берлинская селекторка и артистка, переосмысливающая techno и trance 1990-х.","bio":"Séxstasy работает с яркой, телесной клубной музыкой: old-school trance, hard house, techno и electro-pop подаются без дистанции и академической осторожности. В её сетах ностальгические синтезаторы соседствуют с современным темпом и жёстким низом.","why":"Полуночный слот должен перевести НЕОН от live-программы к открытому, немного дерзкому рейвовому режиму.","sources":["https://soundcloud.com/sexstasy","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Hespermen":{"hook":"Основатель лейбла Private Persons — важной платформы современного electro и сырого techno.","bio":"Hespermen запустил Private Persons в 2016 году; лейбл выпускал музыку Locked Club и многих авторов новой постсоветской electro-сцены. Как диджей он опирается на мутантное electro, EBM, wave и techno, предпочитая шероховатый звук и редкие записи.","why":"Его поздний сет — возможность услышать кураторский вкус человека, который во многом сформировал отдельный музыкальный круг.","sources":["https://privatepersons.bandcamp.com/","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Andrey Kling":{"hook":"Московский диджей и многолетний музыкальный энтузиаст с широкой синтезаторной коллекцией.","bio":"Andrey Kling известен по клубным и радио-сетам, в которых встречаются minimal synth, wave, electro, proto-house и редкие европейские пластинки. Его подход скорее коллекционерский, чем жанрово-функциональный: треки выбираются за характер и необычный звук.","why":"Он открывает пятницу НЕОНа и может задать сцене сложную палитру до серии живых выступлений.","sources":["https://soundcloud.com/andrey-kling","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Violetov General":{"hook":"Культовый болгарский проект тёмной электроники, созданный в Софии в 1989 году.","bio":"Violetov General — проект Эмиля Валева, работающий на границе darkwave, industrial, noise, synth-pop и экспериментальной электроники. Долгая история позволяет ему соединять аутентичный опыт поздних 1980-х с современным аппаратным live, не имитируя эпоху извне.","why":"Это редкое историческое выступление: слушать стоит и как концерт, и как живой документ восточноевропейского андеграунда.","sources":["https://violetovgeneral.bandcamp.com/","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Timur Ptahin":{"hook":"Казанский музыкант и клубный куратор, превращающий synth-pop и new wave в живой танцевальный спектакль.","bio":"Timur Ptahin связан с казанским клубом «Соль» и локальной независимой сценой. Его live соединяет electroclash, new beat, synth-pop, house и ироничную сценическую подачу, а песни и инструментальные эпизоды постоянно меняются ролями.","why":"После Violetov General он покажет более молодую и игровую версию синтезаторной культуры.","sources":["https://soundcloud.com/timurptahin","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Ildar Iksanov":{"hook":"Музыкант группы «Труд», основатель No Wave! и диджей с любовью к new beat, trance и постпанку.","bio":"Ильдар Иксанов совмещает игру на ударных, организацию событий и DJ-практику. Его сеты соединяют романтику 1980-х, танцевальную энергию 1990-х, raw house, new wave и странный русскоязычный материал, избегая строгой клубной ортодоксии.","why":"Этот час — хорошая точка перехода от концертного Timur Ptahin к более глубокому ночному digging.","sources":["https://soundcloud.com/ildar-iksanov","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Blackmoon77":{"hook":"Американо-немецкий виниловый коллекционер мутантной танцевальной музыки.","bio":"Blackmoon77 вырос в Лос-Анджелесе, начал диджеить в середине 1990-х и позднее стал частью европейского андеграунда. Его коллекция охватывает industrial, EBM, acid, obscure disco, wave и записи, которые трудно поместить в один каталог.","why":"После Mick Wills этот сет продолжит линию редких пластинок, но может быть ещё менее предсказуемым и более грубым.","sources":["https://soundcloud.com/blackmoon77","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Bogdamn":{"hook":"Московский диджей Богдан Бойчук: wave, industrial, медленные голоса и гипнотический ритм.","bio":"Bogdamn вырос из среды Underdog и независимых московских баров. Его сеты часто объединяют cold wave, EBM, industrial, synth-pop и неочевидный house, создавая тёмную, но не агрессивную кинематографичность.","why":"Предрассветный слот должен стать не techno-марафоном, а густой сменой атмосферы и темпа.","sources":["https://soundcloud.com/bogdamn","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Sharvari Piroska":{"hook":"Альтер-эго Сергея Голикова из проекта «Дорогой Серёжа» и трио «Всадник ЖКХ».","bio":"Под именем Sharvari Piroska Сергей Голиков играет DJ-сеты, в которых песенная и абсурдистская чувствительность его групп переводится в коллекционерскую электронику. Можно ожидать wave, experimental pop, dub, disco и музыку, выбранную скорее по образу, чем по жанру.","why":"Утро НЕОНа подходит этой свободной логике: сет может быть одновременно танцевальным, смешным и странно трогательным.","sources":["https://soundcloud.com/outlinefestival","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"LVRIN":{"hook":"Российский продюсер и диджей с международной дискографией raw techno, electro и industrial.","bio":"LVRIN выпускался на Pinkman, Phormix, Lux Rec, Crimes of the Future, ARMA и других лейблах. Его музыка сочетает жёсткую драм-машину, тёмную синтезаторную атмосферу и ритмику между EBM, techno и electro.","why":"Открытие субботней ночи НЕОНа будет более собранным и клубным, чем дневная эклектика сцены.","sources":["https://lvrin.bandcamp.com/","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Rambal Cochet":{"hook":"Ритуальный synth-live Константина Исаева: ранний goa, trance, new age и EBM.","bio":"Rambal Cochet строит музыку из арпеджио, аналоговых синтезаторов и гипнотической повторяемости. В его эстетике сталкиваются космический new age, ранний Goa trance, synthwave и индустриальная телесность; live часто звучит как воображаемая церемония из 1990-х.","why":"Это один из проектов, который особенно важно увидеть целиком: эффект рождается из постепенного нарастания и сценического присутствия.","sources":["https://rambalcochet.bandcamp.com/","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Flüchtlink":{"hook":"Live-проект Антона Воробьёва с breakbeat, bleep и трансовой скоростью.","bio":"Flüchtlink связан с петербургским сообществом Roots United и в 2026 году выпустил EP Limbo State. Музыка соединяет британскую bleep-традицию, breaks, techno и trance, но подаёт их как современную аппаратную импровизацию.","why":"После Rambal Cochet он сохранит психоделическую направленность, сделав ритм более ломаным и нервным.","sources":["https://fluchtlink.bandcamp.com/","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Sputnik & Mashkov":{"hook":"Два опытных резидента System 108 в совместном сете без жанровых ограждений.","bio":"Sputnik и Eugene Mashkov много лет участвуют в московской клубной культуре и программах System 108. Оба обладают широкими коллекциями от house и disco до electro, new beat и bass; b2b позволяет им реагировать друг на друга и резко менять направление.","why":"Утренний дуэт должен стать подвижным и общительным финалом ночной программы, а не монолитным techno-сетом.","sources":["https://system108.com/","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Izhevski":{"hook":"Московский продюсер мелодичного deep house и музыки тихого созерцания.","bio":"Izhevski известен сольными релизами и работами с Gorje Hewek. Его музыка строится на мягкой перкуссии, воздушных мелодиях и медленном развитии; даже клубные треки сохраняют ощущение открытого пространства.","why":"Дневной воскресный сет НЕОНа станет спокойной перезагрузкой после ночной плотности.","sources":["https://izhevski.bandcamp.com/","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Agraba":{"hook":"Азмат Agraba — московский диджей и продюсер, создатель собственных клубных серий.","bio":"Начав в Краснодаре, Agraba продолжил карьеру в Москве и запустил вечеринки Agraba Night, Zoo Party, COLOR5 и GEO. Его стиль движется между house, melodic techno и indie dance, а промоутерский опыт помогает уверенно работать с большим открытым танцполом.","why":"После созерцательного Izhevski он должен добавить дневной сцене упругий, более прямой грув.","sources":["https://ra.co/dj/agraba","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Geju":{"hook":"Московский продюсер slow house и ритуальной электроники с восточными интонациями.","bio":"Geju создаёт медленную психоделическую танцевальную музыку, где органическая перкуссия, вокальные фрагменты и восточные мотивы соединяются с house-грувом. Его часто относят к chillrave и downtempo-сцене, но лучшие работы держатся не на расслабленности, а на гипнозе.","why":"Финал НЕОНа должен получиться тёплым, медленным и подходящим для перехода от фестивальной ночи к дню.","sources":["https://geju.bandcamp.com/","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Dressel Amorosi":{"hook":"Итальянский live-дуэт на стыке космического disco, library music и хоррор-саундтреков.","bio":"Dressel Amorosi объединяет Heinrich Dressel и Federico Amorosi — басиста, игравшего в составе Claudio Simonetti’s Goblin. Проект опирается на итальянское жанровое кино 1970–80-х, аналоговые синтезаторы, cosmic funk и мрачную библиотечную музыку.","why":"Открытие БЛОКА будет похоже на концерт воображаемого фильма: live важнее танцевальной эффективности отдельных треков.","sources":["https://dresselamorosi.bandcamp.com/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Труд":{"hook":"Минималистичный московский постпанк, выросший из группы Manicure.","bio":"Ядро «Труда» составляют Жоря Кушнаренко и Ильдар Иксанов. Группа соединяет сухую ритм-секцию, короткие гитарные фразы и тексты о личной и социальной повседневности; в истории коллектива есть выступления на Primavera Sound и несколько поколений московского андеграунда.","why":"В тесном пространстве БЛОКА их компактные песни и живая барабанная энергия должны звучать особенно физически.","sources":["https://trud.bandcamp.com/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Vahan Stepanyan":{"hook":"Армянский междисциплинарный художник и культурный продюсер, работающий с музыкой, сценографией и видео.","bio":"Ваан Степанян сотрудничал с Universal Music и ECM, а в 2015 году вместе с армянской командой и Тиграном Амасяном представлял страну на Пражской квадриеннале. В клубном контексте он выступает как селектор, перенося опыт визуального и пространственного мышления в DJ-сет.","why":"Его час между двумя live-проектами стоит воспринимать как авторскую смену среды, а не обычный разогрев.","sources":["https://mediafactory.am/en/who-we-are/vahan_stepanyan","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Utah":{"hook":"Диджейка московского underground-круга ARMA, Signal и Blank.","bio":"Utah регулярно появляется в программах ARMA и крупных независимых фестивалей рядом с артистами minimal, electro и leftfield house. В записанных сетах она предпочитает глубокий, пружинящий материал и длинные переходы, иногда уходя в breaks и более тёмное techno.","why":"Перед DJ Pierre ей предстоит собрать клубный танцпол и подготовить место для исторического acid-house нарратива.","sources":["https://ra.co/dj/utah","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Sofia Rodina":{"hook":"Резидентка ARMA и представительница Russian Techno New Wave.","bio":"София Родина родилась в Магадане, прошла петербургскую сцену и затем стала одной из заметных диджеек Москвы. За более чем двенадцать лет она выступала на ARMA, Outline, Signal, Gamma и европейских площадках; в её сетах techno, electro и acid звучат строго, быстро и драматично.","why":"После DJ Pierre она сможет перевести acid-энергию в современное ночное techno без потери исторической связи.","sources":["https://ra.co/dj/sofiarodina","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Angelina":{"hook":"Московская диджейка из ближайшего круга ARMA и его ночных программ.","bio":"Angelina регулярно выступает на событиях ARMA, Outline и связанных с ними afterhours-сессиях. По доступным записям её поле — minimal, deep techno и сухой electro с точной, ненавязчивой работой переходов.","why":"Утренний слот подходит её сдержанному методу: поддержать движение после Sofia Rodina, не превращая сет в новый пик.","sources":["https://soundcloud.com/arma17","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Roma Ptashenko":{"hook":"Московский диджей с тонкой селекцией minimal, house и ломаного грува.","bio":"Roma Ptashenko регулярно появляется на ARMA, Signal и в независимых микс-сериях, включая Ute. Его сеты соединяют microhouse, electro, breaks и странные функциональные пластинки; важнее всего в них непрерывность и слух к фактуре.","why":"Закрытие пятничного БЛОКА получится не громким, а детальным и упругим — музыка для тех, кто остался танцевать до конца.","sources":["https://soundcloud.com/roma-ptashenko","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Досада":{"hook":"Московский art-punk и тяжёлый психоделический rock с театральной нервностью.","bio":"«Досада» соединяет punk, doom, stoner, noise и абсурдистскую русскоязычную песню. Альбомы «Мазер», «Чудес нет» и «Сами над нами» показывают группу, которая умеет быть одновременно тяжёлой, смешной и тревожной.","why":"На БЛОКЕ это будет именно концертное вторжение: гитары и живая ритм-секция резко изменят клубную акустику сцены.","sources":["https://dosada.bandcamp.com/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Психея":{"hook":"Одна из главных российских альтернативных групп 2000-х, соединившая nu-metal, industrial и электронику.","bio":"«Психея» возникла в Кургане, а на рубеже тысячелетий переехала в Петербург. Под руководством Дмитрия «Фео» Порубова группа выработала узнаваемый звук из тяжёлых гитар, речитатива, экстремального вокала и электронного шума; альбомы «Герой поколения бархат» и «Каждую секунду пространства» стали важными для русской альтернативной сцены.","why":"Их фестивальный live — встреча с коллективом, чья музыка рассчитана на предельную эмоциональную и физическую отдачу.","sources":["https://psychea-store.ru/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Maksimovna":{"hook":"Ростовский power-дуэт и яркий неорейв с самоиронией.","bio":"Maksimovna выпустили альбом «Кассета для лучшего друга» на System 108. Проект сочетает жёсткую электронную ритмику, pop-хуки, рейвовую эстетику и нарочито чрезмерный сценический образ, но за иронией стоит хорошее знание клубной музыки.","why":"После тяжёлой «Психеи» дуэт не снижает энергию, а меняет её язык с rock-концерта на электронный аттракцион.","sources":["https://system108.bandcamp.com/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Станция метро Горьковская":{"hook":"Нижегородский мультимедийный коллектив, превращающий клубное событие в большое городское шоу.","bio":"«Станция метро Горьковская» организует вечеринки с масштабным светом, декорациями и спецэффектами и развивает лейбл GRK Music. Музыкальная основа сообщества — drum’n’bass, garage, house и bass, но проект важен именно коллективной постановкой и локальной идентичностью.","why":"На БЛОКЕ стоит ждать не одиночного DJ, а концентрата эстетики их собственных нижегородских событий.","sources":["https://grkmusic.bandcamp.com/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Errortica":{"hook":"Петербургская диджейка и продюсерка с радикально эклектичным музыкальным вкусом.","bio":"Errortica ведёт программу Melomatica на TESTFM и выпускала ремиксы и авторские треки, связанные с System 108 и европейскими платформами. Её сеты свободно переходят между house, electro, disco, breakbeat, pop-мутациями и экспериментальной электроникой.","why":"После коллективного шоу «Станции» она сможет разобрать энергию на неожиданные и более тонкие жанровые повороты.","sources":["https://ra.co/dj/errortica","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Kovyazin D":{"hook":"Дмитрий Ковязин — аппаратный продюсер и мастер клубного монтажа из System 108.","bio":"Kovyazin D выпускался на M>O>S, Craigie Knowes и Eidetic и известен live/DJ-практикой, где turntablism, locked grooves, акапеллы и аналоговые синтезаторы работают как единый инструмент. В его языке встречаются acid house, Italo, new beat, EBM и electro.","why":"Заявленный live обещает непредсказуемую сборку материала в реальном времени — один из технически самых интересных слотов БЛОКА.","sources":["https://kovyazind.bandcamp.com/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Mark S":{"hook":"Российский продюсер клубной электроники с опорой на hardware и ритмический импульс.","bio":"Mark S связан с московской techno-средой и Resonance; его релизы, включая EP Impulse, движутся между techno, electro и более ломаной машинной музыкой. Live-формат подчёркивает работу с синтезаторами и секвенсорами, а не воспроизведение готового DJ-микса.","why":"После Kovyazin D это продолжение аппаратной линии, но с более прямым и современным давлением.","sources":["https://resonancemoscow.bandcamp.com/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Hipushit":{"hook":"Резидент ARMA и DEX, специализирующийся на глубоком ночном minimal и house.","bio":"Hipushit много лет играет в московских клубах и на фестивалях, обычно в поздних или утренних слотах. Его сеты строятся на редком виниловом материале, сухом груве, dubby-эхе и постепенном снижении внешней драматичности.","why":"Финальный час БЛОКА должен вернуть внимание к чистой клубной функции после серии ярких live.","sources":["https://ra.co/dj/hipushit","https://outlinefestival.org/feed/outline-2026-timetable/"]},"KRLW & Timur Omar":{"hook":"Специальный дуэтный сет с тёплым jazz-noir, библиотечной музыкой и винтажной электроникой.","bio":"KRLW и опытный селектор Timur Omar открывают БАЛКОН совместной программой, которую фестивальный гид описывает как погружение в тёплый jazz-noir. Это не стандартный house-разогрев, а подборка на границе jazz, soundtrack, downtempo, soul и редкой синтезаторной музыки.","why":"Сет задаёт камерной сцене кинематографичный тон и лучше всего работает как начало вечера, когда детали ещё не растворились в общем шуме.","sources":["https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Мироходец":{"hook":"Site-specific AV-перформанс Ирины Малой и Sila Sveta Music с канатоходцем на стене бруталистского здания.","bio":"«Мироходец» создан специально для архитектуры Outline. Исполнитель движется вдоль массивной бетонной стены, а генеративная графика и аналоговая музыка превращают физический баланс в визуальную историю о преодолении и переходе от разрушения к созиданию. Короткие показы встроены между концертами БАЛКОНА как повторяющийся художественный мотив.","why":"Здесь важно выбрать точку с полным обзором стены: смысл рождается одновременно из риска движения, масштаба архитектуры, света и звука.","sources":["https://theblueprint.ru/news/40761","https://t.me/s/outlinefestival","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Дорогой Сережа":{"hook":"Бардская песня, городская ирония и клубный опыт Сергея Голикова.","bio":"«Дорогой Серёжа» — авторский проект Сергея Голикова, известного московской клубной публике как диджей и участник «Всадника ЖКХ». В песнях он соединяет простую гитарную форму, разговорные наблюдения, абсурд и неожиданную сентиментальность; программа «Вояж» сделала этот образ особенно узнаваемым.","why":"Live на БАЛКОНЕ интересен близкой дистанцией: интонация и текст здесь важнее громкости.","sources":["https://dorogoyseryozha.bandcamp.com/","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Zombierella":{"hook":"Сольный dark-pop проект Светланы Нагаевой, басистки и вокалистки Messer Chups.","bio":"Zombierella с 2005 года участвует в культовой surf-rock группе Messer Chups, известной хоррор- и B-movie-эстетикой. В сольной музыке она смещается к darkwave, synth-pop, dream-pop и медленной электронике, сохраняя кинематографический образ.","why":"Её выступление после «Дорогого Серёжи» продолжит ночную меланхолию, но переведёт её из бардовской комнаты в неоновое кино.","sources":["https://zombierella.bandcamp.com/","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"The Squidbillys":{"hook":"Гаражно-сёрфовый live с панковской скоростью и многолетней DIY-дискографией.","bio":"The Squidbillys выпускают музыку с начала 2010-х; в каталоге есть релизы «Свиноферма», «4» и ранние демо. Их звук соединяет garage rock, surf, punk и нарочито грязную концертную энергетику — музыку, которая выигрывает от тесного пространства и прямого контакта.","why":"Это самый rock’n’roll-эпизод пятничного БАЛКОНА: стоит ждать коротких песен и высокой физической отдачи.","sources":["https://thesquidbillys.bandcamp.com/","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Караван Историй":{"hook":"Экспериментальная московская группа из круга импровизационного rock и коллектива БРОМ.","bio":"Участники «Каравана Историй» связаны с группами БРОМ и «Ленин Пакет», поэтому проект наследует свободную импровизацию, тяжёлый groove, spoken word и абсурдистскую песенную форму. Заранее написанная композиция здесь легко распадается на шумовой или jazz-эпизод.","why":"Live лучше воспринимать как неповторяемое событие: структура может измениться прямо на сцене.","sources":["https://bromband.bandcamp.com/","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Pale Blue Mack":{"hook":"Московский виниловый селектор глобального groove, soul и редкой танцевальной музыки.","bio":"Pale Blue Mack появляется в программах Original Meet, культурных фестивалей и камерных московских площадок. Его коллекция ориентирована на jazz, funk, afro, latin, reggae, disco и музыку, которая сохраняет живую инструментальную фактуру даже в DJ-сете.","why":"После двух rock-live он вернёт БАЛКОН к мягкому танцу и расширит географию звучания.","sources":["https://soundcloud.com/pale-blue-mack","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Таня Ротарь":{"hook":"Диджейка, музыкальная исследовательница и создательница магазина Rotary Records.","bio":"Таня Ротарь занимается digging-культурой профессионально: собирает и продаёт винил, выступает на радио и строит сеты из disco, jazz, boogie, wave и редкой pop-музыки. Её подход ценен не количеством раритетов, а умением сделать из них связный эмоциональный маршрут.","why":"Подутренний сет БАЛКОНА должен быть тёплым и любопытным — музыка для слушателей, которые ещё готовы открывать новое.","sources":["https://rotaryrecords.ru/","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Tanya Andrianova":{"hook":"Диджейка, радиоведущая и куратор музыкальных программ московских пространств.","bio":"Таня Андрианова много лет формировала музыкальную среду бара «Стрелка» и других городских площадок, читала лекции и объединяла диджеев через профессиональное сообщество. Её сеты опираются на богатый travel-digging: jazz, soul, disco, global grooves, house и музыку вне клубного канона.","why":"На БАЛКОНЕ она открывает jazz-folk-день и задаёт контекст живым ансамблям, а не просто разогревает их.","sources":["https://soundcloud.com/tanya-andrianova","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Starlight Jazz Trio":{"hook":"Камерное трио: голос, гитара и контрабас в авторских версиях jazz- и pop-композиций.","bio":"Starlight Jazz Trio работает с редкими и известными песнями XX–XXI веков, перестраивая их для прозрачного акустического состава. В центре — вокальная интерпретация и взаимодействие музыкантов, а не демонстрация виртуозности ради неё самой.","why":"Небольшая сцена идеально подходит этому формату: можно услышать дыхание, паузы и нюансы аранжировки.","sources":["https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Artem Baskakov Trio":{"hook":"Современное jazz-трио саксофона, контрабаса и ударных.","bio":"Артем Баскаков играет на контрабасе с юности и участвовал в программах New York Jazz Masters. Его трио исполняет стандарты и оригинальный материал, оставляя много места для импровизации и равноправного диалога инструментов.","why":"После камерного вокального трио программа станет более открытой и инструментально рискованной.","sources":["https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"The Sunboys":{"hook":"Супергруппа московской импровизационной сцены.","bio":"В The Sunboys играют музыканты, связанные с free jazz и новой импровизацией: Владимир Лучанский, Иван Бурсов, Дмитрий Лапшин и Пётр Отоцкий. Их музыка строится не вокруг фиксированных песен, а вокруг мгновенной композиции, коллективного слуха и столкновения тембров.","why":"Каждый концерт существует один раз, поэтому записанный трек не сможет точно предсказать фестивальный live.","sources":["https://thesunboys.bandcamp.com/","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Putana Orangutana":{"hook":"Ироничный live-проект с перегруженным blues, reggae и грубой электроникой.","bio":"Putana Orangutana связан с лейблом miqroflora и ночами No Wave!. В музыке blues-рифы, reggae-пульсация и DIY-электроника намеренно доводятся до чрезмерности, создавая одновременно пародийный и физически убедительный концерт.","why":"Это не стилизация под корневые жанры, а их шумное переизобретение в московском андеграунде.","sources":["https://miqroflora.bandcamp.com/","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Ranishe Niyaak":{"hook":"Резидент ARMA и один из идеологов её свободной, межжанровой селекции.","bio":"Ranishe Niyaak известен сетами, в которых dusty wave, minimal synth, ambient, obscure disco и slow house соединяются без клубной спешки. Он работает не только как диджей, но и как участник кураторского ядра ARMA.","why":"На БАЛКОНЕ заявлен deep hut-drum: ожидается медленная, деревянно-перкуссионная и почти шаманская танцевальная среда.","sources":["https://ra.co/dj/ranisheniyaak","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Ural Massif":{"hook":"Екатеринбургский виниловый селектор и представитель уральского музыкального подполья.","bio":"Ural Massif связан с локальными независимыми событиями и собственным брендом Urals. Его сеты объединяют dub, tribal, slow house, experimental и редкую этническую/психоделическую музыку, уделяя особое внимание физическому качеству винилового звука.","why":"В глубокой ночи он продолжит hut-drum-линию Ranishe Niyaak, но добавит более суровый уральский оттенок.","sources":["https://soundcloud.com/ural-massif","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Mesr":{"hook":"Коллекционер музыкальной экзотики и финальный селектор БАЛКОНА.","bio":"Mesr известен в московском digging-круге как собиратель exotica, нестандартной library music, global grooves и странных ритмических записей. В программе БАЛКОНА он включён в серию deep hut-drum, поэтому коллекционерская сторона будет подчинена медленному, земляному танцу.","why":"Рассветный сет может стать одним из самых необычных: не громкий финал, а путешествие по звуковым культурам и вымышленным географиям.","sources":["https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Студия новой музыки “Анатомия звука”":{"hook":"Академическая программа спектрализма, где главным материалом становится внутреннее устройство тембра.","bio":"Студия новой музыки — один из основных российских ансамблей современной академической музыки. Программа «Анатомия звука» обращается к спектрализму: композиторы анализируют обертоновый состав звука и строят форму из его постепенных превращений, отодвигая привычные мелодию и гармонию.","why":"Это концерт для максимально внимательного слушания; лучше занять место заранее и воспринимать зал как акустическую лабораторию.","sources":["https://www.studionewmusic.ru/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Valentin Fufaev":{"hook":"Московский экспериментальный композитор, работающий с синтезом, шумом, флейтой и компьютерной музыкой.","bio":"Валентин Фуфаев выпускает серии работ с программными названиями VIRTUOSING, NOISING и SYNTHING. Его подход сочетает интуитивную импровизацию и техническое исследование инструмента: цифровой процесс может соседствовать с дыханием флейты или грубой аналоговой перегрузкой.","why":"Live на ДАРКЕ стоит слушать как процесс возникновения звука, а не набор законченных песен.","sources":["https://valentinfufaev.bandcamp.com/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Taya + Agnes Paz":{"hook":"Перформативный дуэт колокола и терменвокса.","bio":"Taya работает с телом, голосом и объектом, а Agnes Paz — терменвоксистка, участвующая в международном сообществе инструмента. Для Outline они соединяют два источника, которыми управляют без обычного клавишного контакта: колокол через удар и резонанс, терменвокс через движение рук в электромагнитном поле.","why":"Главный интерес — в пространственном диалоге длинных обертонов и жестов исполнительниц; смотреть не менее важно, чем слушать.","sources":["https://theremin30.com/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Lacrima":{"hook":"Перформанс Сергея Скурту и Олеси Ващенко с гидравлической драм-машиной.","bio":"Lacrima исследует воду одновременно как природный материал, механизм и музыкального партнёра. Специальная конструкция создаёт ритм через давление, струи и резонанс, а исполнители выстраивают с ней полиритмический диалог, который невозможно полностью контролировать.","why":"Это инженерно-поэтическая работа: ценность в непредсказуемом поведении воды, а не в демонстрации устройства.","sources":["https://lacrima-project.com/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Saraf":{"hook":"Иммерсивный перформанс на границе noise, телесного действия и ритуала.","bio":"Saraf появляется в программах экспериментальных московских событий рядом с noise- и performance-артистами. Проект использует голос, перегруженный звук, сценическое движение и образ, создавая напряжённую ситуацию вместо традиционного концерта.","why":"Лучше прийти к началу и не ждать привычной композиции: смысл рождается из последовательности действий и реакции пространства.","sources":["https://outlinefestival.org/feed/outline-2026-timetable/"]},"Owuo":{"hook":"Петербургский industrial-metal проект, возвращающий тяжесть Godflesh и раннего machine-rock.","bio":"Owuo — сравнительно новый коллектив из Петербурга. Альбом Rupture опирается на наследие Godflesh, Spine Wrench и Dead World: низко настроенные гитары, механические барабаны, шум и медленное индустриальное давление.","why":"На ДАРКЕ группа выступит как полноценный концерт, и физическая масса звука будет важнее сценической виртуозности.","sources":["https://owuo.bandcamp.com/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Николай Пряженцев":{"hook":"Саунд-артист и изобретатель акустических объектов, включая трёхметровый «Волгафон».","bio":"Николай Пряженцев создаёт звуковые полотна из noise, полевых записей, механических резонансов и самодельных инструментов. Его релиз «Кузнечики Кирова» выходил на Broken Tape Records, а крупные акустические объекты превращают пространство в часть композиции.","why":"Live на ДАРКЕ — возможность услышать noise не как стену громкости, а как исследование материала и масштаба.","sources":["https://brokentaperecords.bandcamp.com/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Atoraye":{"hook":"Композитор и sound designer, соединяющий ambient, drone и полевые записи Ближнего Востока.","bio":"Atoraye работает с медленной электроакустикой, восточными инструментальными оттенками и окружающими звуками, в том числе записанными в Ливане. Он создаёт музыку для перформансов и аудиовизуальных проектов; в ней важны пространство, тишина и почти кинематографический монтаж.","why":"Финальный live пятницы даст слуху восстановиться после industrial и noise, не разрушая мистическую атмосферу ДАРКА.","sources":["https://atoraye.bandcamp.com/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"AMA “Ангелос”":{"hook":"Хореографическая постановка арт-группы AMA с музыкой проекта «Механорецепторен».","bio":"«Ангелос» — работа, отобранная в художественную программу Outline. Она исследует образ ангела через тело, баланс и коллективное движение; электронная композиция «Механорецепторен» формирует не фон, а физическую среду, на которую реагируют танцовщики.","why":"Смотреть нужно как современный танец: внимание к повторяющимся жестам и отношениям между телами важнее поиска музыкального хита.","sources":["https://outlinefestival.org/feed/2026-open-call-art/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Вильгений Мельников, Дмитрий Ануфриев “Потерянный горизонт × Электрохолм”":{"hook":"Междисциплинарный перформанс двух художников о ландшафте, памяти и электроакустическом пространстве.","bio":"Вильгений Мельников и Дмитрий Ануфриев объединяют проекты «Потерянный горизонт» и «Электрохолм». Работа строится на взаимодействии объекта, света, полевой и электронной звуковой среды и действия исполнителей, превращая сцену в воображаемый изменяющийся рельеф.","why":"Это не концерт с линейной кульминацией: лучше наблюдать, как медленно меняется сама система пространства.","sources":["https://outlinefestival.org/feed/2026-open-call-art/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Зорин-Арт Плюс “Дыхание света”":{"hook":"Аудиовизуальный перформанс о переходе от разрушения к созиданию.","bio":"«Дыхание света» проекта Zorin-Art Plus было выбрано через open call Outline. Аналоговый электронный звук синхронизируется с генеративной графикой и световой драматургией, создавая визуальную историю преодоления, равновесия и восстановления.","why":"Эта работа требует хорошей точки обзора: музыка объясняет движение изображения, а изображение меняет восприятие тембра.","sources":["https://outlinefestival.org/feed/2026-open-call-art/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Ad Usum Delphini":{"hook":"Болгарский darkwave/industrial live, выросший из круга Violetov General.","bio":"Ad Usum Delphini — софийский проект, выпускающий музыку самостоятельно и через страницы Violetov General. В его звучании встречаются post-industrial, ritual ambient, darkwave и аудиовизуальная эстетика; название отсылает к латинской формуле «для пользования дофина», связанной с цензурированными изданиями классики.","why":"На ДАРКЕ это будет мрачный аппаратный live с исторической восточноевропейской чувствительностью.","sources":["https://adusumdelphini.bandcamp.com/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Sergey Komarov vs Settima Tacca":{"hook":"Экспериментальная встреча саунд-артиста Сергея Комарова и проекта Settima Tacca.","bio":"Settima Tacca выпускает медленную психоделическую и ambient-музыку; на альбоме Wondrous Feelings of Ages Long Gone Сергей Комаров участвовал в визуальной части, а совместный live развивает уже существующий творческий диалог. Ожидается взаимодействие полевых записей, drone, аналоговой электроники и импровизации.","why":"Формат «vs» предполагает не обычный дуэт, а столкновение двух методов, поэтому итоговая форма будет зависеть от сцены.","sources":["https://settimatacca.bandcamp.com/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Akroama":{"hook":"Гибридный танцевально-театральный проект с live-электроникой COH.","bio":"AKROĀMA создавался как работа, объединяющая современный танец, театр и музыку в реальном времени. Композитор Иван Павлов, известный как COH, строит электронную среду, а исполнители исследуют социальную дистанцию, различие и возможность примирения.","why":"На Outline этот live-перформанс стоит воспринимать как сценическую постановку, где тело и звук равноправны.","sources":["https://www.mokaproduction.com/akroama-1","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Grima":{"hook":"Международно известный сибирский atmospheric black metal с мифологией древнего леса.","bio":"Grima была создана в 2014 году красноярскими братьями-близнецами Вильгельмом и Морбиусом как студийный проект, а затем выросла в полноценную концертную группу. Музыка соединяет быстрый black metal, эпические мелодии и образ суровой сибирской природы; альбом Nightside укрепил международную репутацию коллектива.","why":"На ДАРКЕ это редкое появление большой metal-группы: нужны готовность к высокой громкости и полному концертному ритуалу.","sources":["https://grima.bandcamp.com/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Черные Бояре":{"hook":"Экспериментальная noise-группа, превратившая русскую поэзию в кислотный клубно-metal перформанс.","bio":"«Черные Бояре» существуют как экспериментальный коллектив с 2021 года. На EP «Белый Лебедь» Катя Кобзарь читает Цветаеву, Ахматову и Мандельштама поверх музыки Максима Назарова, смешивающей acid breakbeat, саундтреки «Матрицы» и «Блэйда», black metal и рейв-клише 1990-х.","why":"Концерт будет одновременно литературным, шумовым и клубным — один из самых намеренно чрезмерных проектов ДАРКА.","sources":["https://blackboyars.bandcamp.com/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Moino":{"hook":"Белорусский электронный live-проект, работающий с импровизацией и плотным саунд-дизайном.","bio":"Moino появился в белорусской независимой электронной среде в середине 2020-х. Доступные релизы показывают интерес к abstract electronic, ambient и ритмическим конструкциям, а пометка creative-live в фестивальной программе указывает на свободную сборку материала на сцене.","why":"После rock-перформанса «Черных Бояр» он должен вернуть ДАРК к чистому электронному эксперименту и постепенному погружению.","sources":["https://music.apple.com/ru/artist/moino/1625379373","https://outlinefestival.org/feed/outline-2026-timetable/"]},"DJ Sofi Sollar":{"hook":"Диджейка экспериментальной сцены, закрывающая ДАРК после ночи live и перформансов.","bio":"Sofi Sollar появляется в программах независимых арт- и клубных событий с сетами, где ambient, experimental, wave и нестандартная танцевальная музыка сменяют друг друга без жёсткой жанровой рамки. В контексте ДАРКА её задача — собрать следы предыдущих выступлений в цельное послесловие.","why":"Стоит ждать не обычной afterparty, а кураторского финала с резкими изменениями плотности и настроения.","sources":["https://soundcloud.com/sofi-sollar","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Inoplanegong & Orlov-Davydovsky":{"hook":"Совместный сет двух экспериментальных музыкантов, открывающий аудиофильскую СТЕЛЛУ.","bio":"Inoplanegong связан с проектом wiwaxis и московской импровизационно-электронной средой; Orlov-Davydovsky работает с диджейской и звуковой практикой. Вместе они формируют вступление, где ambient, musique concrète, нестандартная электроника и пространственный звук важнее клубной прямолинейности.","why":"Это настройка слуха и акустики сцены: лучше прийти к началу и дать музыке время сформировать пространство.","sources":["https://soundcloud.com/outlinefestival","https://outlinefestival.org/feed/2026-stella/"]},"Lena Tsibizova & Piper Spray":{"hook":"Розовый шум, мечтательный noise-pop и совместная студийная электроника.","bio":"Лена Цибизова и Piper Spray выпустили альбом Leaving Memory и другие совместные работы, включая материал на Theory Therapy. Их музыка соединяет ambient, shoegaze, голос, гитарный шум и расплывающийся электронный ритм; организаторы ARMA описывали live как «розовый шум и мечтательный нойз».","why":"На СТЕЛЛЕ этот материал должен особенно выиграть от аудиофильской системы и большой световой вертикали.","sources":["https://theorytherapy.bandcamp.com/track/spell","https://outlinefestival.org/feed/2026-stella/"]},"OL~ live":{"hook":"Живой вариант проекта OL: московская гибридная электроника между house, jungle, breaks и ambient.","bio":"OL — продюсер Олег Буянов, один из ключевых авторов лейбла ГОСТ ЗВУК и участник AEM Rhythm-Cascade. В live-формате он не просто сводит записи, а пересобирает собственный материал, подчёркивая ломаную ритмику, низкие частоты и мелодические фрагменты.","why":"Это возможность услышать знакомый клубный почерк в более авторской и рискованной форме.","sources":["https://gostzvuk.bandcamp.com/","https://outlinefestival.org/feed/2026-stella/"]},"Николай Козлов":{"hook":"Гитарист и электронный импровизатор, работающий с ambient и shoegaze-фактурой.","bio":"Николай Козлов появляется в новой московской экспериментальной сцене как участник live-коллабораций. В совместной программе с Софией Журавковой его гитара и труба соединялись с ambient и shoegaze; сольный слот продолжает исследование растянутого тембра и живой петлевой обработки.","why":"На СТЕЛЛЕ стоит слушать именно звук инструмента в пространстве, а не ждать традиционной гитарной песни.","sources":["https://t.me/s/armaseventeen","https://outlinefestival.org/feed/2026-stella/"]},"FMSAO":{"hook":"Краснодарский продюсер Евгений Щукин, основатель Fuselab и автор масштабной lo-fi электроники.","bio":"FMSAO совмещает роль музыканта и лейбл-куратора. Альбом «Ультимэ» исследует psychedelic dub, off-kilter dance и lo-fi ambient на протяжении двух часов, а Storm Tracks показывает более медитативную сторону проекта.","why":"Финал первой ночи СТЕЛЛЫ подойдёт для глубокого listening-режима: музыка действует медленно и раскрывается через текстуру.","sources":["https://fuselab.bandcamp.com/album/--8","https://outlinefestival.org/feed/2026-stella/"]},"SERKH":{"hook":"Молодой электронный селектор, открывающий дневную аудиофильскую программу.","bio":"SERKH появляется в программах новой экспериментальной и клубной сцены с DJ-сетами, где ambient, leftfield electronic, dub и спокойный broken beat работают как постепенная настройка пространства. Его публичный каталог компактный, поэтому лучше всего проект раскрывают записанные миксы и живые выступления.","why":"Первый дневной слот СТЕЛЛЫ — возможность услышать выбор музыки без давления ночного танцпола и внимательно проследить переход от тишины к ритму.","sources":["https://soundcloud.com/serkh","https://outlinefestival.org/feed/2026-stella/"]},"SENSONICA “Аудионаблюдение”":{"hook":"Перформанс, превращающий слушание окружающей среды в сценическое действие.","bio":"«Аудионаблюдение» проекта SENSONICA исследует, как человек выделяет, запоминает и интерпретирует звуки вокруг себя. В работе используются полевые записи, электроакустическая обработка и перформативные жесты, направляющие внимание аудитории между реальным пространством фестиваля и созданной звуковой моделью.","why":"Важно не искать привычный ритм, а следить, где заканчивается окружающая среда и начинается композиция.","sources":["https://outlinefestival.org/feed/2026-open-call-art/","https://outlinefestival.org/feed/2026-stella/"]},"Svastha":{"hook":"Медитативный электронный live, в котором ambient постепенно приобретает телесную пульсацию.","bio":"Svastha работает с протяжёнными синтезаторными слоями, мягким ритмом и постепенной трансформацией тембра. Проект относится к новой live-сцене, где ambient и клубная электроника не разделены: спокойная поверхность может скрывать сильную низкочастотную работу и аппаратную импровизацию.","why":"Дневной слот СТЕЛЛЫ даст возможность услышать динамику и микродетали без давления ночного танцпола.","sources":["https://soundcloud.com/svastha","https://outlinefestival.org/feed/2026-stella/"]},"VibroSoundLab":{"hook":"Лабораторный live-проект, исследующий вибрацию, физику низких частот и пространственное звучание.","bio":"VibroSoundLab строит выступление вокруг синтеза, резонанса и ощущения звука телом. Вместо традиционной песенной драматургии проект работает с частотными слоями, микропульсацией и изменением акустического объёма — именно поэтому он включён в аудиофильскую программу СТЕЛЛЫ.","why":"Лучшее место — внутри звукового поля, а не далеко сбоку: различия в позиции будут частью опыта.","sources":["https://outlinefestival.org/feed/2026-stella/","https://outlinefestival.org/feed/outline-2026-timetable/"]},"Dmitry Lu":{"hook":"Композитор электронной и аудиовизуальной музыки с опытом театральных и лабораторных проектов.","bio":"Dmitry Lu выпускает сольные электронные работы и участвует в междисциплинарных концертах; его материал звучал в программе NOISEROOM на Новой сцене Александринского театра. Музыка движется между ambient, cinematic electronic, экспериментальным ритмом и минималистичной драматургией.","why":"Как сетовый слот перед цепочкой live он должен связать художественную и клубную части пятницы.","sources":["https://music.apple.com/ru/artist/dmitry-lu/1599978541","https://outlinefestival.org/feed/2026-stella/"]},"mishxn":{"hook":"Московский post-club продюсер и модульный live-исполнитель.","bio":"mishxn выступал в ARMA, Blank, Пушкинском музее и за пределами России. Его live строится на модульных синтезаторах, noise, techno и ambient; релизы на Resonance Moscow, включая «аджика.хентай» и «плохие новости», показывают как танцевальную, так и созерцательную сторону.","why":"На СТЕЛЛЕ особенно интересно наблюдать, как из абстрактного шума постепенно возникает ритм и снова растворяется.","sources":["https://ra.co/dj/mishxn/biography","https://resonancemoscow.bandcamp.com/","https://outlinefestival.org/feed/2026-stella/"]},"Digital Moss":{"hook":"Модульный ambient-проект Евгения Попова из Рязани.","bio":"Digital Moss — сольная работа участника electronic/post-rock трио I am waiting for you last summer. В его дискографии преобладают cinematic ambient, cyberpunk-фактуры и живые eurorack-импровизации, где длинные синтезаторные слои развиваются без спешки.","why":"Live на СТЕЛЛЕ должен прозвучать как пространственный саундтрек и подготовить систему к более ритмичному Nikita Zabelin.","sources":["https://digitalmoss.bandcamp.com/","https://outlinefestival.org/feed/2026-stella/"]},"Асаркан":{"hook":"Live-проект, обращающийся к наследию художника и писателя Александра Асаркана.","bio":"Название отсылает к Александру Асаркану — фигуре московского неофициального искусства, известной авторскими почтовыми открытками и ситуационистским отношением к городской жизни. Музыкальный проект работает с текстом, голосом, архивной интонацией и экспериментальной электроникой, превращая культурную память в живую звуковую форму.","why":"Это выступление стоит воспринимать как аудиоэссе и перформанс, а не как обычный концерт.","sources":["https://gorky.media/context/chelovek-kotoryj-pridumal-fejsbuk/","https://outlinefestival.org/feed/2026-stella/"]},"Артем Галкин":{"hook":"Мультиинструменталист uSSSy, соединяющий noise-rock с музыкой Ближнего Востока.","bio":"Артём Галкин — участник классического состава uSSSy, коллекционер народных инструментов и исследователь суфийской и курдской музыкальных традиций. Он играет на восточных лютнях и использует микротональность, импровизацию и тяжёлую обработку, не разделяя этнический материал и экспериментальный rock.","why":"Сольный live на СТЕЛЛЕ позволит услышать его инструменты и электронику подробнее, чем в полном групповом составе.","sources":["https://usssy.bandcamp.com/","https://outlinefestival.org/feed/2026-stella/"]},"Sophia Zhuravkova":{"hook":"Московская композиторка и электронная артистка между ambient, sound art и экспериментальным pop.","bio":"София Журавкова выпускала сольные треки на Infinito Audio Network, создала серию Interior Music и участвовала в проекте Ewer. Её музыка строится из прозрачных синтезаторных слоёв, голоса, полевых ощущений и тонких ритмических импульсов.","why":"DJ-формат может раскрыть источники её собственной музыки — от ambient до нестандартной современной композиции.","sources":["https://sophiazhuravkova.bandcamp.com/","https://outlinefestival.org/feed/2026-stella/"]},"Mark Esin":{"hook":"Гитарист, импровизатор и автор экспериментальной электроники.","bio":"Mark Esin работает с гитарой, sampler, drum machine, recorder и noise-процессингом. Он участвовал в проектах Egor Zhirnov, сотрудничал с Musya Krotkova и появлялся в радио-программах с советской и постсоветской электронной редкостью.","why":"Live обещает коллаж из гитарного шума, ритмических машин и импровизации — материал, который особенно зависит от конкретной акустики.","sources":["https://soundcloud.com/markesin","https://outlinefestival.org/feed/2026-stella/"]},"Push’n’Pull":{"hook":"Московский семейный live-дуэт Алексея Благодатских и Даши Пушкиной.","bio":"Push’n’Pull много лет соединяют disco-house, electro, hip-hop-речёвки и женский вокал. Проект возник в клубной культуре начала 2010-х и известен как полноценный live DJ-performance, где музыка сопровождается игрой ролей и подчёркнутой праздничностью.","why":"После более абстрактных проектов дуэт внесёт человеческий, вокальный и танцевальный контраст.","sources":["https://ra.co/dj/pushnpull","https://outlinefestival.org/feed/2026-stella/"]},"Lisokot & Vikhornov feat. Сhoir(∞)":{"hook":"Расширенный вокально-электронный ансамбль вокруг артистки Lisokot и мультиинструменталиста Мити Вихорнова.","bio":"Lisokot — Варя Павлова, экспериментальная певица, известная сотрудничеством с Atom™ и работой с musique concrète, folk и обработанным голосом. Митя Вихорнов добавляет инструментальную и электронную импровизацию, а Choir(∞) превращает сольный голос в многослойный коллективный организм.","why":"Это один из ключевых специальных проектов СТЕЛЛЫ: лучше смотреть полностью, чтобы услышать, как отдельные голоса собираются в пространственную композицию.","sources":["https://aelitarecords.bandcamp.com/album/fog","https://outlinefestival.org/feed/2026-stella/"]},"Electric Blue":{"hook":"Московский DJ-проект из экспериментально-импровизационного клубного круга.","bio":"Electric Blue появляется в программах НПО «Мелодия», ARMA и совместных сетах с Lisokot. В доступных записях слышны house, electro, dub, experimental и свободная работа с более песенным материалом; образ проекта строится вокруг селекции и чувствительности к нестандартной форме.","why":"Глубокая ночь СТЕЛЛЫ может сделать этот сет одним из самых непредсказуемых — от танца до почти радиофонического монтажа.","sources":["https://soundcloud.com/electric-blue-moscow","https://outlinefestival.org/feed/2026-stella/"]},"xpl0re":{"hook":"Продюсер медиаарт-проектов, основатель студии CYCLOPS и селектор.","bio":"xpl0re работает на пересечении визуального производства и электронной музыки. Его DJ-сеты охватывают minimal, microhouse, broken rhythms, IDM и ambient, а опыт работы с медиаартом проявляется во внимании к форме и монтажу.","why":"Утренний час СТЕЛЛЫ должен соединить сложную ночную live-программу с более свободным listening-режимом.","sources":["https://soundcloud.com/xpl0re","https://outlinefestival.org/feed/2026-stella/"]},"Egor Holkin":{"hook":"Екатеринбургский диджей и постоянный селектор московской «Стрелки».","bio":"Егор Холкин прошёл путь от уральской сцены до резидентской роли в одном из главных московских баров. Его сеты открыты к disco, funk, house, indie dance и популярной музыке, но всегда основаны на точном чувстве конкретной компании и места.","why":"У воды он будет работать не как фестивальный хедлайнер, а как опытный барный диджей, способный менять настроение без разрушения разговора и танца.","sources":["https://soundcloud.com/egor-holkin","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Orange":{"hook":"Jungle и drum’n’bass селектор, отвечающий за быстрый предрассветный ритм.","bio":"Orange представлен в российской bass-среде сетами в жанрах jungle и drum’n’bass. Его музыкальная функция в пятничной программе подтверждается окружением: между экспериментальным Ron Morelli и радиоведущим Pirumov он переводит танцпол к чистой брейковой энергии.","why":"Стоит ждать быстрых amen-breaks, тяжёлого баса и более прямого танцевального импульса, чем на большинстве сцен Outline.","sources":["https://dj.ru/orange7","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Pirumov":{"hook":"Андрей Пирумов — диджей, продюсер и радиоведущий с длинной историей московского underground.","bio":"Пирумов начал карьеру в клубах начала 2000-х, а сегодня ведёт программы о современной музыке на «Серебряном дожде» и Worldwide FM. Его вкус охватывает broken beat, jazz, soul, house, jungle и глобальную bass-музыку.","why":"Рассветный сет у реки должен быть одновременно танцевальным и радиофонически разнообразным — финал без жанрового туннеля.","sources":["https://soundcloud.com/dj-pirumov","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Sofiya Muntyan":{"hook":"Московская диджейка из fashion- и art-среды с лёгкой, эклектичной ночной селекцией.","bio":"София Мунтян появляется в культурных и клубных программах Москвы, соединяя работу в визуальной индустрии с DJ-практикой. По опубликованным сетам её поле — house, disco, electro и современная pop-электроника, собранные без жёсткой жанровой демонстрации.","why":"Она открывает субботнюю ночь у реки и должна собрать пространство мягко, сохранив возможность и танцевать, и оставаться в барном режиме.","sources":["https://soundcloud.com/sofiya-muntyan","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Igor Kompaniets":{"hook":"Клубный куратор и бывший арт-директор легендарной московской «Солянки».","bio":"Игорь Компаниец был одним из людей, определявших музыкальную политику «Солянки», куда приезжали Lindstrøm, Glass Candy, Diplo, Optimo и многие независимые артисты 2000-х. Как диджей он несёт энциклопедический вкус к disco, indie dance, post-punk, house и странному pop.","why":"Сет интересен как живая связь с эпохой, когда московская клубная культура училась международной эклектике.","sources":["https://avec.club/live.html","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Kito Jempere":{"hook":"Кирилл Сергеев — петербургский продюсер, диджей и лидер Kito Jempere Band.","bio":"Начав с экспериментов на старом компьютере, Kito Jempere прошёл путь от house-релизов на международных лейблах до большой live-группы с jazz, disco, pop и приглашёнными музыкантами, включая Jimi Tenor. Его дискография постоянно меняет форму, но сохраняет мелодичность и тёплый groove.","why":"DJ-сет у реки покажет клубное ядро его музыки и широкий вкус человека, привыкшего мыслить одновременно как продюсер и бэндлидер.","sources":["https://kitojempere.com/","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Mark Schedrin":{"hook":"Московский DJ и продюсер из круга System 108.","bio":"Mark Schedrin выпускает собственную электронную музыку и записывает подкасты для System 108; его селекция движется между house, disco, electro и более медленной клубной психоделией. Он также собирал гостевые плейлисты для модных и культурных медиа.","why":"Глубокая ночь у реки позволяет ему не торопиться и постепенно смещать настроение от Kito Jempere к более странной утренней музыке.","sources":["https://soundcloud.com/system108/system108podcast215","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]},"Kaisou":{"hook":"Московский селектор камерных площадок и независимых радио- и арт-серий.","bio":"Kaisou появляется в программах Most Moscow, Peakart Residence и городских культурных событий. По доступным сетам его область — ambient, downtempo, leftfield house, dub и мягкая экспериментальная электроника; имя отсылает к японскому понятию воспоминания или ретроспекции.","why":"Рассветный сет должен стать спокойным эпилогом: вода, медленный ритм и музыка, допускающая рассеянное слушание.","sources":["https://soundcloud.com/kaisou","https://www.afisha.ru/article/gid-po-outline-2026-kuda-idti-chto-ne-propustit-i-kak-ne-poteryatsya-mezhdu-tehno-iskusstvom-i-rekoy/"]}};
+const raw=document.getElementById('lineup').textContent.trim();
+const stages=['МЕЙН','САН','ВУДЗ','НЕОН','БЛОК','БАЛКОН','ДАРК','СТЕЛЛА','БАР У РЕКИ'];
+const festivalDays=['чт','пт','сб','вс'];
+const dayIndex={чт:0,пт:1,сб:2,вс:3};
+const dates=[
+  {date:23,weekday:'Четверг'},
+  {date:24,weekday:'Пятница'},
+  {date:25,weekday:'Суббота'},
+  {date:26,weekday:'Воскресенье'},
+  {date:27,weekday:'Понедельник'}
+];
+const items=[];
+let currentStage='',currentDay='';
+
+for(const sourceLine of raw.split(/\n/)){
+  const line=sourceLine.trim();
+  if(!line)continue;
+  if(stages.includes(line)){currentStage=line;continue}
+  if(festivalDays.includes(line)){currentDay=line;continue}
+  const match=line.match(/^(\d{2}:\d{2})\s+(.+)$/);
+  if(!match)continue;
+  const [,time,rest]=match;
+  const parts=rest.split(/\s*~\s*/);
+  const artist=parts.shift().trim();
+  const format=(parts.join(' ~ ')||'DJ set').trim();
+  const cleanArtist=artist.replace(/[🇺🇸🇨🇱🇷🇴🇺🇾🇪🇸🇫🇷🇧🇬🇩🇪🇮🇹🇦🇲🇲🇦🇨🇭🇹🇷]/gu,'').trim();
+  const id=[currentStage,currentDay,time,artist].join('|');
+  items.push({id,stage:currentStage,festivalDay:currentDay,time,artist,cleanArtist,format});
+}
+
+function absoluteMinute(item){
+  const [hour,minute]=item.time.split(':').map(Number);
+  let index=dayIndex[item.festivalDay];
+  if(hour<12)index+=1;
+  return index*1440+hour*60+minute;
+}
+function defaultDuration(item){
+  if(/live|av|перформанс|шоу|концерт|постановка/i.test(item.format))return 60;
+  if(['ВУДЗ','НЕОН','БАР У РЕКИ'].includes(item.stage))return 120;
+  if(item.stage==='МЕЙН')return 90;
+  return 75;
+}
+function prepareIntervals(){
+  const list=items.map(item=>({...item,start:absoluteMinute(item)}));
+  const byStage=new Map();
+  for(const item of list){
+    if(!byStage.has(item.stage))byStage.set(item.stage,[]);
+    byStage.get(item.stage).push(item);
+  }
+  for(const group of byStage.values()){
+    group.sort((a,b)=>a.start-b.start);
+    group.forEach((item,index)=>{
+      const next=group[index+1];
+      const gap=next?next.start-item.start:Infinity;
+      item.duration=gap>0&&gap<=240?gap:defaultDuration(item);
+      item.end=item.start+item.duration;
+      item.endIsEstimated=!(gap>0&&gap<=240);
+    });
+  }
+  return list.sort((a,b)=>a.start-b.start||stages.indexOf(a.stage)-stages.indexOf(b.stage));
+}
+const schedule=prepareIntervals();
+const byId=new Map(schedule.map(item=>[item.id,item]));
+
+const favs=new Set(JSON.parse(localStorage.getItem('festival-favs')||'[]'));
+const notes=JSON.parse(localStorage.getItem('festival-notes')||'{}');
+let view=localStorage.getItem('festival-view')||'all';
+let selectedDate=localStorage.getItem('festival-date')||'all';
+let selectedStage=localStorage.getItem('festival-stage')||'all';
+
+const app=document.getElementById('app');
+const favoriteCount=document.getElementById('favoriteCount');
+const drawerFavoriteCount=document.getElementById('drawerFavoriteCount');
+const resultCount=document.getElementById('resultCount');
+const dateChips=document.getElementById('dateChips');
+const stageChips=document.getElementById('stageChips');
+const menuButton=document.getElementById('menuButton');
+const backdrop=document.getElementById('backdrop');
+const drawer=document.getElementById('drawer');
+const themeColor=document.getElementById('themeColor');
+
+function esc(value){
+  return String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char]));
+}
+function calendarInfo(minute){
+  return dates[Math.max(0,Math.min(dates.length-1,Math.floor(minute/1440)))];
+}
+function calendarDate(item){return calendarInfo(item.start).date}
+function dateLabel(item){
+  const info=calendarInfo(item.start);
+  return `${info.date} июля, ${item.time}`;
+}
+function formatClock(minute){
+  const h=Math.floor(minute/60)%24;
+  const m=minute%60;
+  return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+}
+function timeRange(item){
+  const end=formatClock(item.end);
+  return item.endIsEstimated?`${item.time}`:`${item.time}–${end}`;
+}
+function durationLabel(minutes){
+  const h=Math.floor(minutes/60),m=minutes%60;
+  if(h&&m)return `${h} ч ${m} мин`;
+  if(h)return `${h} ч`;
+  return `${m} мин`;
+}
+function story(item){return bios[item.cleanArtist]}
+function listenUrl(item){return 'https://www.youtube.com/results?search_query='+encodeURIComponent(item.cleanArtist+' live set')}
+function saveFavs(){localStorage.setItem('festival-favs',JSON.stringify([...favs]))}
+function saveNotes(){localStorage.setItem('festival-notes',JSON.stringify(notes))}
+function sourceLinks(data){
+  if(!data.sources?.length)return '';
+  return `<div class="sources"><span>Источники</span>${data.sources.map((url,index)=>`<a href="${esc(url)}" target="_blank" rel="noopener">${index+1}</a>`).join('')}</div>`;
+}
+function switchView(next){
+  view=next;
+  localStorage.setItem('festival-view',view);
+  document.querySelectorAll('[data-view]').forEach(button=>button.classList.toggle('active',button.dataset.view===view));
+  closeMenu();
+  render();
+}
+function toggleFavorite(id,event){
+  event?.preventDefault();
+  event?.stopPropagation();
+  favs.has(id)?favs.delete(id):favs.add(id);
+  saveFavs();
+  render();
+}
+function toggleCard(button){
+  const card=button.closest('.show-card');
+  card.classList.toggle('open');
+  button.textContent=card.classList.contains('open')?'Скрыть':'Подробнее';
+}
+let noteTimers={};
+function updateNote(id,value,statusId){
+  notes[id]=value;
+  clearTimeout(noteTimers[id]);
+  const status=document.getElementById(statusId);
+  if(status)status.textContent='Сохраняю…';
+  noteTimers[id]=setTimeout(()=>{
+    saveNotes();
+    if(status)status.textContent='Сохранено';
+  },350);
+}
+function setDate(value){
+  selectedDate=value;
+  localStorage.setItem('festival-date',value);
+  render();
+}
+function setStage(value){
+  selectedStage=value;
+  localStorage.setItem('festival-stage',value);
+  render();
+}
+function currentFiltered(){
+  return schedule.filter(item=>{
+    if(view==='mine'&&!favs.has(item.id))return false;
+    if(selectedDate!=='all'&&String(calendarDate(item))!==selectedDate)return false;
+    if(selectedStage!=='all'&&item.stage!==selectedStage)return false;
+    return true;
+  });
+}
+function conflicts(selected){
+  const result=new Map(selected.map(item=>[item.id,[]]));
+  for(let i=0;i<selected.length;i++){
+    for(let j=i+1;j<selected.length;j++){
+      const a=selected[i],b=selected[j];
+      if(a.start<b.end&&b.start<a.end){
+        result.get(a.id).push(b);
+        result.get(b.id).push(a);
+      }
+    }
+  }
+  return result;
+}
+function conflictPairs(map){
+  let total=0;
+  for(const list of map.values())total+=list.length;
+  return total/2;
+}
+function renderChips(){
+  const dateOptions=[['all','Все даты'],...dates.map(info=>[String(info.date),`${info.date} июля`])];
+  dateChips.innerHTML=dateOptions.map(([value,label])=>
+    `<button class="chip ${selectedDate===value?'active':''}" onclick='setDate(${JSON.stringify(value)})'>${label}</button>`
+  ).join('');
+  const stageOptions=[['all','Все сцены'],...stages.map(stage=>[stage,stage])];
+  stageChips.innerHTML=stageOptions.map(([value,label])=>
+    `<button class="chip ${selectedStage===value?'active':''}" onclick='setStage(${JSON.stringify(value)})'>${esc(label)}</button>`
+  ).join('');
+}
+function renderCard(item,conflictMap){
+  const data=story(item);
+  const selected=favs.has(item.id);
+  const clashes=conflictMap?.get(item.id)||[];
+  const noteId='note-'+Math.abs(hashCode(item.id));
+  const statusId='status-'+Math.abs(hashCode(item.id));
+  return `<article class="show-card ${clashes.length?'conflict':''}" id="card-${Math.abs(hashCode(item.id))}">
+    <div class="card-main">
+      <button class="heart ${selected?'on':''}" aria-label="${selected?'Убрать из избранного':'Добавить в избранное'}" onclick='toggleFavorite(${JSON.stringify(item.id)},event)'>${selected?'♥':'♡'}</button>
+      <div class="card-copy">
+        <div class="card-topline">
+          <div>
+            <h3 class="artist-name">${esc(item.artist)}</h3>
+            <div class="card-time">${esc(dateLabel(item))} · ${esc(timeRange(item))} · ${esc(item.stage)}</div>
+          </div>
+        </div>
+        <p class="card-hook">${esc(data.hook)}</p>
+        <div class="tags"><span class="tag">${esc(item.format)}</span>${clashes.length?`<span class="tag">Пересечение · ${clashes.length}</span>`:''}</div>
+        <button class="more-button" type="button" onclick="toggleCard(this)">Подробнее</button>
+      </div>
+    </div>
+    <div class="card-extra">
+      <p>${esc(data.bio)}</p>
+      <p class="why"><strong>Почему обратить внимание:</strong><br>${esc(data.why)}</p>
+      ${clashes.length?`<div class="conflict-box"><strong>Пересекается</strong>${clashes.map(other=>`${esc(other.artist)} · ${esc(other.stage)} · ${esc(other.time)}`).join('<br>')}</div>`:''}
+      <div class="card-actions">
+        <a class="action primary" href="${listenUrl(item)}" target="_blank" rel="noopener">Послушать ↗</a>
+        <button class="action" type="button" onclick='toggleFavorite(${JSON.stringify(item.id)},event)'>${selected?'Убрать из моего лайнапа':'Добавить в мой лайнап'}</button>
+      </div>
+      <label class="note-label" for="${noteId}">Моя заметка</label>
+      <textarea class="note" id="${noteId}" placeholder="Например: прийти к началу, встретиться здесь с друзьями…" oninput='updateNote(${JSON.stringify(item.id)},this.value,${JSON.stringify(statusId)})'>${esc(notes[item.id]||'')}</textarea>
+      <div class="note-status" id="${statusId}">${notes[item.id]?'Сохранено':''}</div>
+      ${sourceLinks(data)}
+    </div>
+  </article>`;
+}
+function hashCode(value){
+  let hash=0;
+  for(let i=0;i<value.length;i++)hash=((hash<<5)-hash)+value.charCodeAt(i)|0;
+  return hash;
+}
+function gapSuggestions(start,end){
+  return schedule.filter(item=>!favs.has(item.id)&&item.start>=start&&item.start<end).slice(0,5);
+}
+function renderMineWithGaps(list,map){
+  if(!list.length)return '';
+  const result=[];
+  list.forEach((item,index)=>{
+    result.push(renderCard(item,map));
+    const next=list[index+1];
+    if(!next)return;
+    const gapStart=item.end;
+    const gapEnd=next.start;
+    const length=gapEnd-gapStart;
+    if(length>=45&&length<=360&&Math.floor(gapStart/1440)===Math.floor(gapEnd/1440)){
+      const options=gapSuggestions(gapStart,gapEnd);
+      result.push(`<div class="gap"><strong>Свободное окно · ${durationLabel(length)}</strong><br>${formatClock(gapStart)}–${formatClock(gapEnd)}
+        ${options.length?`<details><summary>Что играет в это время</summary>${options.map(option=>`<div class="gap-option"><span>${esc(option.time)} · ${esc(option.artist)} · ${esc(option.stage)}</span><button class="heart ${favs.has(option.id)?'on':''}" onclick='toggleFavorite(${JSON.stringify(option.id)},event)'>${favs.has(option.id)?'♥':'♡'}</button></div>`).join('')}</details>`:''}
+      </div>`);
+    }
+  });
+  return result.join('');
+}
+
+function renderTable(){
+  const selected=schedule.filter(item=>favs.has(item.id));
+  favoriteCount.textContent=selected.length;
+  drawerFavoriteCount.textContent=selected.length;
+  resultCount.textContent=`${selected.length} выступлений`;
+  document.querySelectorAll('[data-view]').forEach(button=>button.classList.remove('active'));
+
+  if(!selected.length){
+    app.innerHTML=`<section class="table-view">
+      <div class="table-intro"><div><h2>Таблица пересечений</h2><p>Здесь появятся только выбранные выступления, распределённые по времени и сценам.</p></div></div>
+      <div class="table-empty"><h2>Мой лайнап пока пуст</h2><p>Добавь артистов сердцем в полном лайнапе.</p><button class="action primary" onclick="switchView('all')">Открыть полный лайнап</button></div>
+    </section>`;
+    return;
+  }
+
+  const conflictMap=conflicts(selected);
+  const pairs=conflictPairs(conflictMap);
+  const activeStages=stages.filter(stage=>selected.some(item=>item.stage===stage));
+  const earliest=Math.floor((Math.min(...selected.map(item=>item.start))-30)/60)*60;
+  const latest=Math.ceil((Math.max(...selected.map(item=>item.end))+30)/60)*60;
+  const pxPerMinute=.74;
+  const height=(latest-earliest)*pxPerMinute;
+  const hourHeight=60*pxPerMinute;
+
+  const labels=[];
+  for(let t=earliest;t<=latest;t+=60){
+    labels.push(`<span class="table-hour" style="top:${(t-earliest)*pxPerMinute}px">${formatClock(t)}</span>`);
+  }
+
+  const firstDay=Math.floor(earliest/1440);
+  const lastDay=Math.floor(latest/1440);
+  const dateLines=[];
+  for(let index=firstDay;index<=lastDay;index++){
+    const info=dates[index];
+    if(!info)continue;
+    const boundary=Math.max(earliest,index*1440);
+    dateLines.push(`<div class="table-date-line" style="top:${(boundary-earliest)*pxPerMinute}px"><span class="table-date-label">${info.date} июля · ${info.weekday}</span></div>`);
+  }
+
+  const heads=activeStages.map(stage=>`<div>${esc(stage)}</div>`).join('');
+  const lanes=activeStages.map(stage=>{
+    const cards=selected.filter(item=>item.stage===stage).map(item=>{
+      const clashes=conflictMap.get(item.id)||[];
+      const top=(item.start-earliest)*pxPerMinute;
+      const cardHeight=Math.max(36,(item.end-item.start)*pxPerMinute-4);
+      return `<article class="table-card ${clashes.length?'conflict':''}" style="top:${top}px;height:${cardHeight}px" onclick='scrollToCard(${JSON.stringify(item.id)})'>
+        <button class="table-remove" title="Убрать из моего лайнапа" onclick='toggleFavorite(${JSON.stringify(item.id)},event)'>−</button>
+        <span class="table-card-time">${esc(item.time)}</span>
+        <span class="table-card-name">${esc(item.artist)}</span>
+      </article>`;
+    }).join('');
+    return `<div class="table-lane">${cards}</div>`;
+  }).join('');
+
+  app.innerHTML=`<section class="table-view">
+    <div class="table-intro">
+      <div><h2>Таблица пересечений</h2><p>Вспомогательный вид персонального лайнапа: вертикально — реальное время, горизонтально — только сцены с выбранными артистами.</p></div>
+      <div class="table-tools"><span class="conflict-pill ${pairs?'has':''}">${pairs?`${pairs} пересечений`:'Пересечений нет'}</span><button class="action" onclick="switchView('mine')">Вернуться к карточкам</button></div>
+    </div>
+    <div class="table-scroll">
+      <div class="table-inner" style="--stage-count:${activeStages.length};--table-height:${height}px;--hour-height:${hourHeight}px">
+        <div class="table-head"><div>Время</div>${heads}</div>
+        <div class="table-grid">
+          <div class="table-axis">${labels.join('')}</div>
+          ${lanes}
+          ${dateLines.join('')}
+        </div>
+      </div>
+    </div>
+  </section>`;
+}
+function scrollToCard(id){
+  switchView('mine');
+  requestAnimationFrame(()=>{
+    const target=document.getElementById('card-'+Math.abs(hashCode(id)));
+    target?.scrollIntoView({behavior:'smooth',block:'center'});
+    target?.classList.add('open');
+  });
+}
+
+function render(){
+  document.body.classList.toggle('table-mode',view==='table');
+  renderChips();
+  if(view==='table'){renderTable();return;}
+  const selectedAll=schedule.filter(item=>favs.has(item.id));
+  const conflictMap=conflicts(selectedAll);
+  const pairs=conflictPairs(conflictMap);
+  favoriteCount.textContent=selectedAll.length;
+  drawerFavoriteCount.textContent=selectedAll.length;
+  document.querySelectorAll('[data-view]').forEach(button=>button.classList.toggle('active',button.dataset.view===view));
+
+  const data=currentFiltered();
+  resultCount.textContent=`${data.length} выступлений`;
+
+  if(view==='mine'&&!selectedAll.length){
+    app.innerHTML=`<div class="empty"><h2>Мой лайнап пока пуст</h2><p>Добавляй артистов сердцем в полном лайнапе. Здесь появится твой персональный маршрут, пересечения и свободные окна.</p><button class="action primary" onclick="switchView('all')">Открыть полный лайнап</button></div>`;
+    return;
+  }
+  if(!data.length){
+    app.innerHTML=`<div class="empty"><h2>Ничего не найдено</h2><p>Сбрось дату или сцену, чтобы увидеть другие выступления.</p><button class="action primary" onclick="selectedDate='all';selectedStage='all';render()">Сбросить фильтры</button></div>`;
+    return;
+  }
+
+  const groups=new Map();
+  for(const item of data){
+    const date=calendarDate(item);
+    if(!groups.has(date))groups.set(date,[]);
+    groups.get(date).push(item);
+  }
+
+  const summary=view==='mine'
+    ?`<div class="summary-strip"><span>${selectedAll.length} в моём лайнапе</span><span class="conflict-pill ${pairs?'has':''}">${pairs?`${pairs} пересечений`:'Пересечений нет'}</span></div>`
+    :`<div class="summary-strip"><span>Вся программа по календарному времени</span><span>${schedule.length} выступлений</span></div>`;
+
+  app.innerHTML=summary+[...groups.entries()].map(([date,list])=>{
+    const info=dates.find(item=>item.date===Number(date));
+    const body=view==='mine'?renderMineWithGaps(list,conflictMap):list.map(item=>renderCard(item,conflictMap)).join('');
+    return `<section class="date-section" id="date-${date}">
+      <div class="date-heading"><h2>${date} июля · ${info?.weekday||''}</h2><span>${list.length}</span></div>
+      <div class="card-list">${body}</div>
+    </section>`;
+  }).join('');
+}
+function setTheme(theme){
+  document.documentElement.dataset.theme=theme;
+  localStorage.setItem('festival-theme',theme);
+  themeColor.setAttribute('content',theme==='dark'?'#111111':'#ffffff');
+  document.querySelectorAll('[data-theme-choice]').forEach(button=>button.classList.toggle('active',button.dataset.themeChoice===theme));
+}
+function openMenu(){
+  document.body.classList.add('menu-open');
+  menuButton.setAttribute('aria-expanded','true');
+}
+function closeMenu(){
+  document.body.classList.remove('menu-open');
+  menuButton.setAttribute('aria-expanded','false');
+}
+menuButton.addEventListener('click',()=>document.body.classList.contains('menu-open')?closeMenu():openMenu());
+backdrop.addEventListener('click',closeMenu);
+document.querySelectorAll('[data-view]').forEach(button=>button.addEventListener('click',()=>switchView(button.dataset.view)));
+document.querySelectorAll('[data-drawer-view]').forEach(button=>button.addEventListener('click',()=>switchView(button.dataset.drawerView)));
+document.querySelectorAll('[data-theme-choice]').forEach(button=>button.addEventListener('click',()=>setTheme(button.dataset.themeChoice)));
+document.getElementById('resetFilters').addEventListener('click',()=>{selectedDate='all';selectedStage='all';render()});
+document.getElementById('clearNotes').addEventListener('click',()=>{
+  if(confirm('Удалить все личные заметки?')){
+    Object.keys(notes).forEach(key=>delete notes[key]);
+    saveNotes();
+    render();
+    closeMenu();
+  }
+});
+
+const savedTheme=localStorage.getItem('festival-theme')||'light';
+setTheme(savedTheme);
+switchView(['all','mine','table'].includes(view)?view:'all');
+</script>
+</body>
+</html>
